@@ -1,7 +1,10 @@
 package forum
 
-import "net/http"
+import (
+	"fmt"
+	"net/http"
+)
 
-func homepage(w http.ResponseWriter, r http.Request) {
-
+func HomeHandler(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "Home")
 }
