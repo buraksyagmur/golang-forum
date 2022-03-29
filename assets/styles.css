@@ -1,0 +1,8 @@
+html {
+    box-sizing: border-box;
+    font-family: Open Sans;
+}
+body {
+    margin: 0;
+    background-color: red;
+}

@@ -1,10 +1,16 @@
 package forum
 
 import (
-	"fmt"
+	"html/template"
+	"log"
 	"net/http"
 )
 
 func HomeHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Home")
+	tpl, err := template.ParseFiles("./template/header.gohtml", "./template/footer.gohtml", "./template/index.gohtml")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	tpl.ExecuteTemplate(w, "index.gohtml", nil)
 }

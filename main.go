@@ -10,7 +10,7 @@ import (
 
 func main() {
 	exec.Command("xdg-open", "http://localhost:8080/").Start()
-	http.Handle("/assets/", http.StripPrefix("assets/", http.FileServer(http.Dir("./assets"))))
+	http.Handle("/assets/", http.StripPrefix("/assets", http.FileServer(http.Dir("./assets"))))
 	http.HandleFunc("/", forum.HomeHandler)
 	http.HandleFunc("/login", forum.LoginHandler)
 	http.HandleFunc("/register", forum.RegisterHandler)
