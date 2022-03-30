@@ -7,8 +7,8 @@ import (
 )
 
 func HomeHandler(w http.ResponseWriter, r *http.Request) {
-	tpl, err := template.ParseFiles("./template/header.gohtml", "./template/footer.gohtml", "./template/index.gohtml")
-	// tpl, err := template.ParseFiles("./template/index.gohtml")
+	tpl, err := template.ParseFiles("./templates/header.gohtml", "./templates/footer.gohtml", "./templates/index.gohtml")
+	// tpl, err := template.ParseFiles("./templates/index.gohtml")
 	if err != nil {
 		log.Fatal(err)
 	}
