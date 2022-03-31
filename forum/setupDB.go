@@ -23,7 +23,7 @@ func createUsersTable(db *sql.DB) {
 
 }
 func createPostsTable(db *sql.DB) {
-	stmt, err := db.Prepare("CREATE TABLE IF NOT EXISTS post (postID INTEGER PRIMARY KEY, title TEXT, content TEXT,	datetime DATETIME);")
+	stmt, err := db.Prepare("CREATE TABLE IF NOT EXISTS post (postID INTEGER PRIMARY KEY, title TEXT, content TEXT,	datetime DATETIME, likes INTEGER, dislikes INTEGER);")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -31,18 +31,20 @@ func createPostsTable(db *sql.DB) {
 	stmt.Exec()
 
 	// test insert
-	stmt, err = db.Prepare("INSERT INTO post (postID, title, content, datetime) VALUES (?,?,?,?)")
+	stmt, err = db.Prepare("INSERT INTO post (postID, title, content, datetime, likes, dislikes) VALUES (?,?,?,?,?,?)")
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer stmt.Close()
-	stmt.Exec(0, "test0", "testing0", 0)
+	stmt.Exec(0, "test0", "testing0", 1648730096, 316, 777)
 
 	// test query
 	var pID int
 	var title string
 	var content string
 	var datetime time.Time
+	var likes int
+	var dislikes int
 
 	rows, err := db.Query("SELECT * FROM post")
 	if err != nil {
@@ -51,10 +53,17 @@ func createPostsTable(db *sql.DB) {
 	defer rows.Close()
 
 	for rows.Next() {
-		rows.Scan(&pID, &title, &content, &datetime)
-		fmt.Printf("Post: %d, title: %s, content: %s, at %v\n", pID, title, content, datetime)
+		rows.Scan(&pID, &title, &content, &datetime, &likes, &dislikes)
+		fmt.Printf("Post: %d, title: %s, content: %s, at %v, with %d likes, and %d dislikes\n", pID, title, content, datetime, likes, dislikes)
 	}
 
+	// clear test data
+	stmt, err = db.Prepare("DELETE FROM post")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer stmt.Close()
+	stmt.Exec()
 }
 func InitDB() {
 	db, err := sql.Open("sqlite3", "./forum.db")
