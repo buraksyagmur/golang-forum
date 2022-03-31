@@ -36,7 +36,7 @@ func createPostsTable(db *sql.DB) {
 		log.Fatal(err)
 	}
 	defer stmt.Close()
-	stmt.Exec(0, "test0", "testing0", 1648730096, 316, 777)
+	stmt.Exec(0, "test0", "testing0", time.Now(), 316, 777)
 
 	// test query
 	var pID int
@@ -57,7 +57,7 @@ func createPostsTable(db *sql.DB) {
 		fmt.Printf("Post: %d, title: %s, content: %s, at %v, with %d likes, and %d dislikes\n", pID, title, content, datetime, likes, dislikes)
 	}
 
-	// clear test data
+	// clear the test data
 	stmt, err = db.Prepare("DELETE FROM post")
 	if err != nil {
 		log.Fatal(err)
@@ -65,6 +65,7 @@ func createPostsTable(db *sql.DB) {
 	defer stmt.Close()
 	stmt.Exec()
 }
+
 func InitDB() {
 	db, err := sql.Open("sqlite3", "./forum.db")
 	if err != nil {
