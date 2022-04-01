@@ -7,5 +7,29 @@
         <li class="nav-bar-item"><a href="logout">Logout</a></li>
     </ul>
 </nav>
+<form action="/" method="post" class="post-form">
+    <div>
+        <label for="title">Title:</label>
+        <input type="text" id="title" name="postTitle">
+    </div>
+    <div>
+        <label for="content">Content</label>
+        <textarea name="postContent" id="content" cols="30" rows="6"></textarea>
+    </div>
+    <fieldset>
+        <legend>Choose which categories your post belongs to:</legend>
+        <div>
+            <label for="tech">Technology</label>
+            <input type="checkbox" name="category" id="tech" value="tech">
+        </div>
+        <div>
+            <label for="sci">Science</label>
+            <input type="checkbox" name="category" id="sci" value="sci">
+        </div>
+    </fieldset>
+
+    <button type="submit">Post</button>
+</form>
+
 <h2>Message Board</h2>
 {{template "footer"}}

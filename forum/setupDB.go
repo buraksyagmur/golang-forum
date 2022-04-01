@@ -2,14 +2,14 @@ package forum
 
 import (
 	"database/sql"
-	"fmt"
 	"log"
-	"time"
 
 	_ "github.com/mattn/go-sqlite3"
 )
 
-func createSessionTable(db *sql.DB) {
+var db *sql.DB
+
+func createSessionTable() {
 	stmt, err := db.Prepare("CREATE TABLE IF NOT EXISTS session (sessionID INTEGER PRIMARY KEY,	username TEXT);")
 	if err != nil {
 		log.Fatal(err)
@@ -19,11 +19,11 @@ func createSessionTable(db *sql.DB) {
 	// test
 
 }
-func createUsersTable(db *sql.DB) {
+func createUsersTable() {
 
 }
-func createPostsTable(db *sql.DB) {
-	stmt, err := db.Prepare("CREATE TABLE IF NOT EXISTS post (postID INTEGER PRIMARY KEY, title TEXT, content TEXT,	datetime DATETIME, likes INTEGER, dislikes INTEGER);")
+func createPostsTable() {
+	stmt, err := db.Prepare("CREATE TABLE IF NOT EXISTS post (postID INTEGER PRIMARY KEY AUTOINCREMENT, author VARCHAR(100), title VARCHAR(500), content VARCHAR(5000), category VARCHAR(50), datetime DATETIME, likes INTEGER, dislikes INTEGER);")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -31,47 +31,57 @@ func createPostsTable(db *sql.DB) {
 	stmt.Exec()
 
 	// test insert
-	stmt, err = db.Prepare("INSERT INTO post (postID, title, content, datetime, likes, dislikes) VALUES (?,?,?,?,?,?)")
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer stmt.Close()
-	stmt.Exec(0, "test0", "testing0", time.Now(), 316, 777)
+	// stmt, err = db.Prepare("INSERT INTO post (postID, author, title, content, category, datetime, likes, dislikes) VALUES (?,?,?,?,?,?,?,?)")
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+	// defer stmt.Close()
+	// stmt.Exec(0, "user0", "test0", "testing0", "tech", time.Now(), 316, 777)
 
-	// test query
-	var pID int
-	var title string
-	var content string
-	var datetime time.Time
-	var likes int
-	var dislikes int
+	// // test clear the test data before query
+	// // stmt, err = db.Prepare("DELETE FROM post")
+	// // if err != nil {
+	// // 	log.Fatal(err)
+	// // }
+	// // defer stmt.Close()
+	// // stmt.Exec()
 
-	rows, err := db.Query("SELECT * FROM post")
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer rows.Close()
+	// // test query
+	// var pID int
+	// var author string
+	// var title string
+	// var content string
+	// var category string
+	// var datetime time.Time
+	// var likes int
+	// var dislikes int
 
-	for rows.Next() {
-		rows.Scan(&pID, &title, &content, &datetime, &likes, &dislikes)
-		fmt.Printf("Post: %d, title: %s, content: %s, at %v, with %d likes, and %d dislikes\n", pID, title, content, datetime, likes, dislikes)
-	}
+	// rows, err := db.Query("SELECT * FROM post")
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+	// defer rows.Close()
+
+	// for rows.Next() {
+	// 	rows.Scan(&pID, &author, &title, &content, &category, &datetime, &likes, &dislikes)
+	// 	fmt.Printf("Post: %d, by %s, title: %s, content: %s, in %s, at %v, with %d likes, and %d dislikes\n", pID, author, title, content, category, datetime, likes, dislikes)
+	// }
 
 	// clear the test data
-	stmt, err = db.Prepare("DELETE FROM post")
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer stmt.Close()
-	stmt.Exec()
+	// stmt, err = db.Prepare("DELETE FROM post")
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+	// defer stmt.Close()
+	// stmt.Exec()
 }
 
 func InitDB() {
-	db, err := sql.Open("sqlite3", "./forum.db")
-	if err != nil {
-		log.Fatal(err)
-	}
-	createSessionTable(db)
-	createUsersTable(db)
-	createPostsTable(db)
+	db, _ = sql.Open("sqlite3", "./forum.db")
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+	createSessionTable()
+	createUsersTable()
+	createPostsTable()
 }
