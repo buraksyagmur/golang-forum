@@ -13,7 +13,7 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			log.Fatal(err)
 		}
-
+		// render all records with query
 		err = tpl.ExecuteTemplate(w, "index.gohtml", nil)
 		if err != nil {
 			http.Error(w, "Executing Error", http.StatusInternalServerError)
@@ -21,6 +21,8 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	if r.Method == "POST" {
 		newPost(r)
+		// posted
+		// redirect to GET
 	}
 }
 
@@ -42,11 +44,14 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func RegisterHandler(w http.ResponseWriter, r *http.Request) {
-	// fmt.Fprintf(w, "Register")
-	tpl, err := template.ParseFiles("./templates/header.gohtml", "./templates/footer.gohtml", "./templates/register.gohtml")
-	if err != nil {
-		log.Fatal(err)
+	if r.Method == "GET" {
+		tpl, err := template.ParseFiles("./templates/header.gohtml", "./templates/footer.gohtml", "./templates/register.gohtml")
+		if err != nil {
+			log.Fatal(err)
+		}
+		tpl.ExecuteTemplate(w, "register.gohtml", nil)
 	}
-
-	tpl.ExecuteTemplate(w, "register.gohtml", nil)
+	if r.Method == "POST" {
+		regNewUser(r)
+	}
 }

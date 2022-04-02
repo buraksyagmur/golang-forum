@@ -1,4 +1,13 @@
 {{template "header"}}
 <h1>Welcome to Our Forum!!</h1>
-
+<h2>Register</h2>
+<form action="/register" method="post" class="forum-form">
+    <div>
+        <label for="uname">Username:</label>
+        <input type="text" id="uname" name="username">
+    </div>
+    <div><label for="email">Email:</label><input type="email" id="email" name="email"></div>
+    <div><label for="pw">Password:</label><input type="password" id="pw" name="password"></div>
+    <button type="submit">Register</button>
+</form>
 {{template "footer"}}

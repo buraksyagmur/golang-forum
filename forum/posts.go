@@ -12,11 +12,11 @@ func newPost(r *http.Request) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	postCon := r.PostForm.Get("postContent")
-	postTitle := r.PostForm.Get("postTitle")
+	postCon := r.FormValue("postContent")
+	postTitle := r.FormValue("postTitle")
 	// fmt.Println(postCon)
 
-	stmt, err := db.Prepare("INSERT INTO post (postID, author, title, content, category, datetime, likes, dislikes) VALUES (?,?,?,?,?,?,?,?);")
+	stmt, err := db.Prepare("INSERT INTO posts (postID, author, title, content, category, datetime, likes, dislikes) VALUES (?,?,?,?,?,?,?,?);")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -33,7 +33,7 @@ func newPost(r *http.Request) {
 	var likes int
 	var dislikes int
 
-	rows, err := db.Query("SELECT * FROM post")
+	rows, err := db.Query("SELECT * FROM posts")
 	if err != nil {
 		log.Fatal(err)
 	}

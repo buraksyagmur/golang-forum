@@ -4,9 +4,12 @@ html {
 }
 body {
     margin: 0;
-    background-color: red;
+    background-color: rgb(81, 105, 125);
 }
 
-.forumForm {
-
+.forum-form input:hover {
+    background-color: rgb(181, 238, 238);
+}
+.forum-form textarea:hover {
+    background-color: rgb(181, 238, 238);
 }

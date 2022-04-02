@@ -19,8 +19,8 @@ func processLoginForm(r *http.Request) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	uname := r.PostForm.Get("username")
-	pw := r.PostForm.Get("password")
+	uname := r.FormValue("username")
+	pw := r.FormValue("password")
 	fmt.Printf("%s: %s", uname, pw)
 }
 
