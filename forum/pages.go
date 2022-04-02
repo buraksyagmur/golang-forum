@@ -52,6 +52,6 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 		tpl.ExecuteTemplate(w, "register.gohtml", nil)
 	}
 	if r.Method == "POST" {
-		regNewUser(r)
+		regNewUser(w, r)
 	}
 }

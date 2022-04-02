@@ -1,10 +1,11 @@
 package forum
 
 import (
-	"fmt"
 	"log"
 	"net/http"
+	"time"
 
+	uuid "github.com/satori/go.uuid"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -17,7 +18,7 @@ type user struct {
 	loggedIn bool
 }
 
-func regNewUser(r *http.Request) {
+func regNewUser(w http.ResponseWriter, r *http.Request) {
 
 	err := r.ParseForm()
 	if err != nil {
@@ -40,18 +41,25 @@ func regNewUser(r *http.Request) {
 	stmt.Exec(1, username, email, hash, 0, true)
 
 	// test
-	var i int
-	var u string
-	var e string
-	var p []byte
-	var a int
-	var l bool
+	// var i int
+	// var u string
+	// var e string
+	// var p []byte
+	// var a int
+	// var l bool
 
-	rows, err := db.Query("SELECT * FROM users")
+	// rows, err := db.Query("SELECT * FROM users")
 
-	for rows.Next() {
-		rows.Scan(&i, &u, &e, &p, &a, &l)
-	}
+	// for rows.Next() {
+	// 	rows.Scan(&i, &u, &e, &p, &a, &l)
+	// }
 
-	fmt.Printf("%d uname: %s e: %s pw: %s, ac: %d, log: %t", i, u, e, p, a, l)
+	// fmt.Printf("%d uname: %s e: %s pw: %s, ac: %d, log: %t", i, u, e, p, a, l)
+	sid := uuid.NewV4()
+	http.SetCookie(w, &http.Cookie{
+		Name:    "session",
+		Value:   sid.String(),
+		Expires: time.Now().Add(time.Minute * 30),
+	})
+	// fmt.Println(sid.String())
 }
