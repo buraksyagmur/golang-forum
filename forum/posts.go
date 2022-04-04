@@ -12,17 +12,23 @@ func newPost(r *http.Request) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	postCon := r.FormValue("postContent")
-	postTitle := r.FormValue("postTitle")
+	postCon := r.PostForm.Get("postContent")
+	postTitle := r.PostForm.Get("postTitle")
+	postCat := r.PostForm["postCat"]
 	// fmt.Println(postCon)
 
-	stmt, err := db.Prepare("INSERT INTO posts (postID, author, title, content, category, datetime, likes, dislikes) VALUES (?,?,?,?,?,?,?,?);")
+	stmt, err := db.Prepare("INSERT INTO posts (author, title, content, category, datetime, likes, dislikes) VALUES (?,?,?,?,?,?,?);")
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer stmt.Close()
-	stmt.Exec(1, "DC", postTitle, postCon, "testCat", time.Now(), 7, 10)
 
+	postCatStr := ""
+	for i := 0; i < len(postCat); i++ {
+		postCatStr += postCat[i] + " "
+	}
+	stmt.Exec("DC", postTitle, postCon, postCatStr, time.Now(), 7, 10)
+	stmt.Exec("ST", postTitle, postCon, postCatStr, time.Now().Add(time.Minute*20), 3, 16)
 	// test
 	var pID int
 	var author string

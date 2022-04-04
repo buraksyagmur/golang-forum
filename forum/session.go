@@ -14,16 +14,25 @@ func loggedIn(r *http.Request) bool {
 	return true
 }
 
-func processLoginForm(r *http.Request) {
+func processLogin(r *http.Request) {
 	err := r.ParseForm()
 	if err != nil {
 		log.Fatal(err)
 	}
-	uname := r.FormValue("username")
-	pw := r.FormValue("password")
+	uname := r.PostForm.Get("username")
+	pw := r.PostForm.Get("password")
 	fmt.Printf("%s: %s", uname, pw)
+
+	// stmt, err := db.Prepare()
 }
 
 func LogoutHanler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Logout")
+	_, err := r.Cookie("session")
+	if err == nil {
+		http.SetCookie(w, &http.Cookie{
+			Name:   "session",
+			Value:  "",
+			MaxAge: -1,
+		})
+	}
 }

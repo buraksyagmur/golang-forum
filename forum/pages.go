@@ -21,8 +21,7 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	if r.Method == "POST" {
 		newPost(r)
-		// posted
-		// redirect to GET
+		http.Redirect(w, r, "/", http.StatusSeeOther)
 	}
 }
 
@@ -39,7 +38,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		tpl.ExecuteTemplate(w, "login.gohtml", nil)
 	}
 	if r.Method == "POST" {
-		processLoginForm(r)
+		processLogin(r)
 	}
 }
 
@@ -55,3 +54,11 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 		regNewUser(w, r)
 	}
 }
+
+// func NotFoundHandler(w http.ResponseWriter, r *http.Request) {
+// 	tpl, err := template.ParseFiles("./templates/header.gohtml", "./templates/footer.gohtml", "./templates/notFound.gohtml")
+// 	if err != nil {
+// 		log.Fatal(err)
+// 	}
+// 	tpl.ExecuteTemplate(w, "notFound.gohtml", nil)
+// }

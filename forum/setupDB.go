@@ -18,7 +18,7 @@ func createSessionTable() {
 
 }
 func createUsersTable() {
-	stmt, err := db.Prepare("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY,username VARCHAR(300),email VARCHAR(500),password VARCHAR(500),access INTEGER,loggedIn BOOLEAN);")
+	stmt, err := db.Prepare("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT,username VARCHAR(300),email VARCHAR(500),password VARCHAR(500),access INTEGER,loggedIn BOOLEAN);")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -34,6 +34,10 @@ func createPostsTable() {
 	stmt.Exec()
 }
 
+func createCommentsTable() {
+	// stmt, err := db.Prepare()
+}
+
 func InitDB() {
 	db, _ = sql.Open("sqlite3", "./forum.db")
 	// if err != nil {
@@ -42,4 +46,5 @@ func InitDB() {
 	createSessionTable()
 	createUsersTable()
 	createPostsTable()
+	createCommentsTable()
 }
