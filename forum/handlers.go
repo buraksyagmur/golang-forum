@@ -57,6 +57,11 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func LogoutHanler(w http.ResponseWriter, r *http.Request) {
+	processLogout(w, r)
+	http.Redirect(w, r, "/", http.StatusSeeOther)
+}
+
 // func NotFoundHandler(w http.ResponseWriter, r *http.Request) {
 // 	tpl, err := template.ParseFiles("./templates/header.gohtml", "./templates/footer.gohtml", "./templates/notFound.gohtml")
 // 	if err != nil {

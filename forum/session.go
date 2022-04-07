@@ -26,7 +26,7 @@ func processLogin(r *http.Request) {
 	// stmt, err := db.Prepare()
 }
 
-func LogoutHanler(w http.ResponseWriter, r *http.Request) {
+func processLogout(w http.ResponseWriter, r *http.Request) {
 	c, _ := r.Cookie("session")
 	fmt.Printf("cookie sid to be removed: %s", c.Value)
 	stmt, err := db.Prepare("DELETE FROM sessions WHERE sessionID=?")
