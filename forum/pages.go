@@ -39,6 +39,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	if r.Method == "POST" {
 		processLogin(r)
+		http.Redirect(w, r, "/", http.StatusSeeOther)
 	}
 }
 
@@ -52,6 +53,7 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	if r.Method == "POST" {
 		regNewUser(w, r)
+		http.Redirect(w, r, "/", http.StatusSeeOther)
 	}
 }
 

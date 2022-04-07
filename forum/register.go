@@ -49,12 +49,16 @@ func regNewUser(w http.ResponseWriter, r *http.Request) {
 	var l bool
 
 	rows, err := db.Query("SELECT * FROM users")
-
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer rows.Close()
 	for rows.Next() {
 		rows.Scan(&i, &u, &e, &p, &a, &l)
 	}
 
 	fmt.Printf("%d uname: %s e: %s pw: %s, ac: %d, log: %t\n", i, u, e, p, a, l)
+
 	sid := uuid.NewV4()
 	http.SetCookie(w, &http.Cookie{
 		Name:   "session",
@@ -62,4 +66,15 @@ func regNewUser(w http.ResponseWriter, r *http.Request) {
 		MaxAge: 1800,
 	})
 	// fmt.Println(sid.String())
+
+	stmt, err = db.Prepare(`
+		INSERT INTO sessions
+		(sessionID, username)
+		VALUES (?,?);
+	`)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer stmt.Close()
+	stmt.Exec(sid.String(), username)
 }

@@ -17,13 +17,13 @@ func createUsersTable() {
 	defer stmt.Close()
 	stmt.Exec()
 }
-func createSessionTable() {
-	stmt, err := db.Prepare("CREATE TABLE IF NOT EXISTS session (sessionID INTEGER PRIMARY KEY AUTOINCREMENT, username VARCHAR(50), FOREIGN KEY(username) REFERENCES users(username));")
+func createSessionsTable() {
+	stmt, err := db.Prepare("CREATE TABLE IF NOT EXISTS sessions (sessionID VARCHAR(50) PRIMARY KEY, username VARCHAR(50), FOREIGN KEY(username) REFERENCES users(username));")
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer stmt.Close()
-
+	stmt.Exec()
 }
 func createPostsTable() {
 	stmt, err := db.Prepare("CREATE TABLE IF NOT EXISTS posts (postID INTEGER PRIMARY KEY AUTOINCREMENT, username VARCHAR(50), title VARCHAR(300), content VARCHAR(2000), category VARCHAR(50), postTime DATETIME, likes INTEGER, dislikes INTEGER, FOREIGN KEY(username) REFERENCES users(username));")
@@ -48,7 +48,7 @@ func InitDB() {
 	// if err != nil {
 	// 	log.Fatal(err)
 	// }
-	createSessionTable()
+	createSessionsTable()
 	createUsersTable()
 	createPostsTable()
 	createCommentsTable()

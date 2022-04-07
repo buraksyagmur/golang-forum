@@ -27,7 +27,24 @@ func processLogin(r *http.Request) {
 }
 
 func LogoutHanler(w http.ResponseWriter, r *http.Request) {
-	_, err := r.Cookie("session")
+	c, _ := r.Cookie("session")
+	fmt.Printf("cookie sid to be removed: %s", c.Value)
+	stmt, err := db.Prepare("DELETE FROM sessions WHERE sessionID=?")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer stmt.Close()
+	stmt.Exec(c.Value)
+
+	//test
+	var sessionID string
+	rows, err := db.Query("SELECT * FROM sessions")
+	for rows.Next() {
+		rows.Scan(&sessionID)
+	}
+	fmt.Printf("cookie sid removed: %s", sessionID) // empty is correct
+
+	_, err = r.Cookie("session")
 	if err == nil {
 		http.SetCookie(w, &http.Cookie{
 			Name:   "session",
