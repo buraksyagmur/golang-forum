@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"time"
 
 	uuid "github.com/satori/go.uuid"
 	"golang.org/x/crypto/bcrypt"
@@ -58,9 +57,9 @@ func regNewUser(w http.ResponseWriter, r *http.Request) {
 	fmt.Printf("%d uname: %s e: %s pw: %s, ac: %d, log: %t\n", i, u, e, p, a, l)
 	sid := uuid.NewV4()
 	http.SetCookie(w, &http.Cookie{
-		Name:    "session",
-		Value:   sid.String(),
-		Expires: time.Now().Add(time.Minute * 30),
+		Name:   "session",
+		Value:  sid.String(),
+		MaxAge: 1800,
 	})
 	// fmt.Println(sid.String())
 }

@@ -9,24 +9,24 @@ import (
 
 var db *sql.DB
 
-func createSessionTable() {
-	stmt, err := db.Prepare("CREATE TABLE IF NOT EXISTS session (sessionID INTEGER PRIMARY KEY,	username TEXT);")
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer stmt.Close()
-
-}
 func createUsersTable() {
-	stmt, err := db.Prepare("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT,username VARCHAR(300),email VARCHAR(500),password VARCHAR(500),access INTEGER,loggedIn BOOLEAN);")
+	stmt, err := db.Prepare("CREATE TABLE IF NOT EXISTS users (username VARCHAR(50) PRIMARY KEY, email VARCHAR(50), password VARCHAR(100), access INTEGER, loggedIn BOOLEAN);")
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer stmt.Close()
 	stmt.Exec()
 }
+func createSessionTable() {
+	stmt, err := db.Prepare("CREATE TABLE IF NOT EXISTS session (sessionID INTEGER PRIMARY KEY AUTOINCREMENT, username VARCHAR(50), FOREIGN KEY(username) REFERENCES users(username));")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer stmt.Close()
+
+}
 func createPostsTable() {
-	stmt, err := db.Prepare("CREATE TABLE IF NOT EXISTS posts (postID INTEGER PRIMARY KEY AUTOINCREMENT, author VARCHAR(100), title VARCHAR(500), content VARCHAR(5000), category VARCHAR(50), datetime DATETIME, likes INTEGER, dislikes INTEGER);")
+	stmt, err := db.Prepare("CREATE TABLE IF NOT EXISTS posts (postID INTEGER PRIMARY KEY AUTOINCREMENT, username VARCHAR(50), title VARCHAR(300), content VARCHAR(2000), category VARCHAR(50), postTime DATETIME, likes INTEGER, dislikes INTEGER, FOREIGN KEY(username) REFERENCES users(username));")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -35,7 +35,12 @@ func createPostsTable() {
 }
 
 func createCommentsTable() {
-	// stmt, err := db.Prepare()
+	stmt, err := db.Prepare("CREATE TABLE IF NOT EXISTS comments (commentID INTEGER PRIMARY KEY AUTOINCREMENT, username VARCHAR(50), postID INTEGER, content VARCHAR(2000), commentTime DATETIME, likes INTEGER, dislikes INTEGER, FOREIGN KEY(username) REFERENCES users(username), FOREIGN KEY(postID) REFERENCES posts(postID));")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer stmt.Close()
+	stmt.Exec()
 }
 
 func InitDB() {

@@ -17,7 +17,7 @@ func newPost(r *http.Request) {
 	postCat := r.PostForm["postCat"]
 	// fmt.Println(postCon)
 
-	stmt, err := db.Prepare("INSERT INTO posts (author, title, content, category, datetime, likes, dislikes) VALUES (?,?,?,?,?,?,?);")
+	stmt, err := db.Prepare("INSERT INTO posts (username, title, content, category, postTime, likes, dislikes) VALUES (?,?,?,?,?,?,?);")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -25,17 +25,22 @@ func newPost(r *http.Request) {
 
 	postCatStr := ""
 	for i := 0; i < len(postCat); i++ {
-		postCatStr += postCat[i] + " "
+		if i != len(postCat)-1 {
+			postCatStr += postCat[i] + "+"
+		}
+		if i == len(postCat)-1 {
+			postCatStr += postCat[i]
+		}
 	}
 	stmt.Exec("DC", postTitle, postCon, postCatStr, time.Now(), 7, 10)
 	stmt.Exec("ST", postTitle, postCon, postCatStr, time.Now().Add(time.Minute*20), 3, 16)
 	// test
 	var pID int
-	var author string
+	var username string
 	var title string
 	var content string
 	var category string
-	var datetime time.Time
+	var postTime time.Time
 	var likes int
 	var dislikes int
 
@@ -46,8 +51,8 @@ func newPost(r *http.Request) {
 	defer rows.Close()
 
 	for rows.Next() {
-		rows.Scan(&pID, &author, &title, &content, &category, &datetime, &likes, &dislikes)
-		fmt.Printf("Post: %d, by %s, title: %s, content: %s, in %s, at %v, with %d likes, and %d dislikes\n", pID, author, title, content, category, datetime, likes, dislikes)
+		rows.Scan(&pID, &username, &title, &content, &category, &postTime, &likes, &dislikes)
+		fmt.Printf("Post: %d, by %s, title: %s, content: %s, in %s, at %v, with %d likes, and %d dislikes\n", pID, username, title, content, category, postTime, likes, dislikes)
 	}
 }
 
