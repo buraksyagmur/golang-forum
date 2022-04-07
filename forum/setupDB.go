@@ -17,6 +17,7 @@ func createUsersTable() {
 	defer stmt.Close()
 	stmt.Exec()
 }
+
 func createSessionsTable() {
 	stmt, err := db.Prepare("CREATE TABLE IF NOT EXISTS sessions (sessionID VARCHAR(50) PRIMARY KEY, username VARCHAR(50), FOREIGN KEY(username) REFERENCES users(username));")
 	if err != nil {
@@ -25,6 +26,7 @@ func createSessionsTable() {
 	defer stmt.Close()
 	stmt.Exec()
 }
+
 func createPostsTable() {
 	stmt, err := db.Prepare("CREATE TABLE IF NOT EXISTS posts (postID INTEGER PRIMARY KEY AUTOINCREMENT, username VARCHAR(50), title VARCHAR(300), content VARCHAR(2000), category VARCHAR(50), postTime DATETIME, likes INTEGER, dislikes INTEGER, FOREIGN KEY(username) REFERENCES users(username));")
 	if err != nil {

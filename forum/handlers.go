@@ -8,13 +8,16 @@ import (
 
 func HomeHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
+		// fmt.Println("get home")
 		tpl, err := template.ParseFiles("./templates/header.gohtml", "./templates/footer.gohtml", "./templates/index.gohtml")
 		// tpl, err := template.ParseFiles("./templates/index.gohtml")
 		if err != nil {
 			log.Fatal(err)
 		}
-		// render all records with query
-		err = tpl.ExecuteTemplate(w, "index.gohtml", nil)
+
+		po := displayPostsAndComments()
+
+		err = tpl.ExecuteTemplate(w, "index.gohtml", po)
 		if err != nil {
 			http.Error(w, "Executing Error", http.StatusInternalServerError)
 		}

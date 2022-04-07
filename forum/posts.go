@@ -7,6 +7,17 @@ import (
 	"time"
 )
 
+type post struct {
+	postID   int
+	username string
+	Title    string
+	content  string
+	category string
+	postTime time.Time
+	likes    int
+	dislikes int
+}
+
 func newPost(r *http.Request) {
 	err := r.ParseForm()
 	if err != nil {
@@ -33,29 +44,40 @@ func newPost(r *http.Request) {
 		}
 	}
 	stmt.Exec("DC", postTitle, postCon, postCatStr, time.Now(), 7, 10)
-	stmt.Exec("ST", postTitle, postCon, postCatStr, time.Now().Add(time.Minute*20), 3, 16)
-	// test
-	var pID int
-	var username string
-	var title string
-	var content string
-	var category string
-	var postTime time.Time
-	var likes int
-	var dislikes int
+	// stmt.Exec("ST", postTitle, postCon, postCatStr, time.Now().Add(time.Minute*20), 3, 16)
 
+	// test
+	// var pid int
+	// var un string
+	// var t string
+	// var con string
+	// var cat string
+	// var pT time.Time
+	// var l int
+	// var d int
+
+	// rows, err := db.Query("SELECT * FROM posts")
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+	// defer rows.Close()
+
+	// for rows.Next() {
+	// 	rows.Scan(&pid, &un, &t, &con, &cat, &pT, &l, &d)
+	// 	fmt.Printf("Post: %d, by %s, Title: %s, content: %s, in %s, at %v, with %d likes, and %d dislikes\n", pid, un, t, con, cat, pT, l, d)
+	// }
+}
+
+func displayPostsAndComments() post {
+	var po post
 	rows, err := db.Query("SELECT * FROM posts")
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer rows.Close()
-
 	for rows.Next() {
-		rows.Scan(&pID, &username, &title, &content, &category, &postTime, &likes, &dislikes)
-		fmt.Printf("Post: %d, by %s, title: %s, content: %s, in %s, at %v, with %d likes, and %d dislikes\n", pID, username, title, content, category, postTime, likes, dislikes)
+		rows.Scan(&(po.postID), &(po.username), &(po.Title), &(po.content), &(po.category), &(po.postTime), &(po.likes), &(po.dislikes))
+		fmt.Printf("Display Post: %d, by %s, title: %s, content: %s, in %s, at %v, with %d likes, and %d dislikes\n", po.postID, po.username, po.Title, po.content, po.category, po.postTime, po.likes, po.dislikes)
 	}
-}
-
-func displayPostsAndComments() {
-
+	return po
 }
