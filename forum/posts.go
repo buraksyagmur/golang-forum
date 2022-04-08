@@ -11,7 +11,7 @@ type post struct {
 	postID   int
 	username string
 	Title    string
-	content  string
+	Content  string
 	category string
 	postTime time.Time
 	likes    int
@@ -68,16 +68,18 @@ func newPost(r *http.Request) {
 	// }
 }
 
-func displayPostsAndComments() post {
-	var po post
+func displayPostsAndComments() []post {
+	var pos []post
 	rows, err := db.Query("SELECT * FROM posts")
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer rows.Close()
 	for rows.Next() {
-		rows.Scan(&(po.postID), &(po.username), &(po.Title), &(po.content), &(po.category), &(po.postTime), &(po.likes), &(po.dislikes))
-		fmt.Printf("Display Post: %d, by %s, title: %s, content: %s, in %s, at %v, with %d likes, and %d dislikes\n", po.postID, po.username, po.Title, po.content, po.category, po.postTime, po.likes, po.dislikes)
+		var po post
+		rows.Scan(&(po.postID), &(po.username), &(po.Title), &(po.Content), &(po.category), &(po.postTime), &(po.likes), &(po.dislikes))
+		fmt.Printf("Display Post: %d, by %s, title: %s, content: %s, in %s, at %v, with %d likes, and %d dislikes\n", po.postID, po.username, po.Title, po.Content, po.category, po.postTime, po.likes, po.dislikes)
+		pos = append(pos, po)
 	}
-	return po
+	return pos
 }

@@ -15,9 +15,9 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 			log.Fatal(err)
 		}
 
-		po := displayPostsAndComments()
+		pos := displayPostsAndComments()
 
-		err = tpl.ExecuteTemplate(w, "index.gohtml", po)
+		err = tpl.ExecuteTemplate(w, "index.gohtml", pos)
 		if err != nil {
 			http.Error(w, "Executing Error", http.StatusInternalServerError)
 		}
