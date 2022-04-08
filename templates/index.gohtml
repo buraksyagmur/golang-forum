@@ -46,7 +46,11 @@
 {{range .}}
 <div class="forum-post">
     <h3>{{.Title}}</h3>
-    <p>{{.Content}}/p>
+    <p>{{.Content}}</p>
+    <p>{{.Category}}</p>
+    <p>{{.PostTime}}</p>
+    <span>{{.Likes}}</span>
+    <span>{{.Dislikes}}</span>
 </div>
 {{end}}
 {{template "footer"}}

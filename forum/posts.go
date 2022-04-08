@@ -12,10 +12,10 @@ type post struct {
 	username string
 	Title    string
 	Content  string
-	category string
-	postTime time.Time
-	likes    int
-	dislikes int
+	Category string
+	PostTime time.Time
+	Likes    int
+	Dislikes int
 }
 
 func newPost(r *http.Request) {
@@ -77,8 +77,8 @@ func displayPostsAndComments() []post {
 	defer rows.Close()
 	for rows.Next() {
 		var po post
-		rows.Scan(&(po.postID), &(po.username), &(po.Title), &(po.Content), &(po.category), &(po.postTime), &(po.likes), &(po.dislikes))
-		fmt.Printf("Display Post: %d, by %s, title: %s, content: %s, in %s, at %v, with %d likes, and %d dislikes\n", po.postID, po.username, po.Title, po.Content, po.category, po.postTime, po.likes, po.dislikes)
+		rows.Scan(&(po.postID), &(po.username), &(po.Title), &(po.Content), &(po.Category), &(po.PostTime), &(po.Likes), &(po.Dislikes))
+		fmt.Printf("Display Post: %d, by %s, title: %s, content: %s, in %s, at %v, with %d likes, and %d dislikes\n", po.postID, po.username, po.Title, po.Content, po.Category, po.PostTime, po.Likes, po.Dislikes)
 		pos = append(pos, po)
 	}
 	return pos
