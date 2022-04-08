@@ -4,10 +4,10 @@
 <form action="/register" method="post" class="forum-form">
     <div>
         <label for="uname">Username:</label>
-        <input type="text" id="uname" name="username">
+        <input type="text" id="uname" name="username" minlength="1" maxlength="30">
     </div>
     <div><label for="email">Email:</label><input type="text" id="email" name="email"></div>
-    <div><label for="pw">Password:</label><input type="password" id="pw" name="password"></div>
+    <div><label for="pw">Password:</label><input type="password" id="pw" name="password" minlength="6"></div>
     <button type="submit">Register</button>
 </form>
 {{template "footer"}}

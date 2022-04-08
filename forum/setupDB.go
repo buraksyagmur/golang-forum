@@ -10,7 +10,7 @@ import (
 var db *sql.DB
 
 func createUsersTable() {
-	stmt, err := db.Prepare("CREATE TABLE IF NOT EXISTS users (username VARCHAR(50) PRIMARY KEY, email VARCHAR(50), password VARCHAR(100), access INTEGER, loggedIn BOOLEAN);")
+	stmt, err := db.Prepare("CREATE TABLE IF NOT EXISTS users (username VARCHAR(30) PRIMARY KEY, email VARCHAR(50), password VARCHAR(100), access INTEGER, loggedIn BOOLEAN);")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -19,7 +19,7 @@ func createUsersTable() {
 }
 
 func createSessionsTable() {
-	stmt, err := db.Prepare("CREATE TABLE IF NOT EXISTS sessions (sessionID VARCHAR(50) PRIMARY KEY, username VARCHAR(50), FOREIGN KEY(username) REFERENCES users(username));")
+	stmt, err := db.Prepare("CREATE TABLE IF NOT EXISTS sessions (sessionID VARCHAR(50) PRIMARY KEY, username VARCHAR(30), FOREIGN KEY(username) REFERENCES users(username));")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -28,7 +28,7 @@ func createSessionsTable() {
 }
 
 func createPostsTable() {
-	stmt, err := db.Prepare("CREATE TABLE IF NOT EXISTS posts (postID INTEGER PRIMARY KEY AUTOINCREMENT, username VARCHAR(50), title VARCHAR(300), content VARCHAR(2000), category VARCHAR(50), postTime DATETIME, likes INTEGER, dislikes INTEGER, FOREIGN KEY(username) REFERENCES users(username));")
+	stmt, err := db.Prepare("CREATE TABLE IF NOT EXISTS posts (postID INTEGER PRIMARY KEY AUTOINCREMENT, username VARCHAR(30), title VARCHAR(50), content VARCHAR(1000), category VARCHAR(50), postTime DATETIME, likes INTEGER, dislikes INTEGER, FOREIGN KEY(username) REFERENCES users(username));")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -37,7 +37,7 @@ func createPostsTable() {
 }
 
 func createCommentsTable() {
-	stmt, err := db.Prepare("CREATE TABLE IF NOT EXISTS comments (commentID INTEGER PRIMARY KEY AUTOINCREMENT, username VARCHAR(50), postID INTEGER, content VARCHAR(2000), commentTime DATETIME, likes INTEGER, dislikes INTEGER, FOREIGN KEY(username) REFERENCES users(username), FOREIGN KEY(postID) REFERENCES posts(postID));")
+	stmt, err := db.Prepare("CREATE TABLE IF NOT EXISTS comments (commentID INTEGER PRIMARY KEY AUTOINCREMENT, username VARCHAR(30), postID INTEGER, content VARCHAR(2000), commentTime DATETIME, likes INTEGER, dislikes INTEGER, FOREIGN KEY(username) REFERENCES users(username), FOREIGN KEY(postID) REFERENCES posts(postID));")
 	if err != nil {
 		log.Fatal(err)
 	}

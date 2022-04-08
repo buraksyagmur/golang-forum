@@ -55,9 +55,8 @@ func regNewUser(w http.ResponseWriter, r *http.Request) {
 	defer rows.Close()
 	for rows.Next() {
 		rows.Scan(&i, &u, &e, &p, &a, &l)
+		fmt.Printf("%d uname: %s e: %s pw: %s, ac: %d, log: %t\n", i, u, e, p, a, l)
 	}
-
-	fmt.Printf("%d uname: %s e: %s pw: %s, ac: %d, log: %t\n", i, u, e, p, a, l)
 
 	sid := uuid.NewV4()
 	http.SetCookie(w, &http.Cookie{
@@ -67,14 +66,12 @@ func regNewUser(w http.ResponseWriter, r *http.Request) {
 	})
 	// fmt.Println(sid.String())
 
-	stmt, err = db.Prepare(`
-		INSERT INTO sessions
-		(sessionID, username)
-		VALUES (?,?);
-	`)
+	stmt, err = db.Prepare("INSERT INTO sessions (sessionID, username) VALUES (?,?);")
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer stmt.Close()
 	stmt.Exec(sid.String(), username)
 }
+
+// some bug

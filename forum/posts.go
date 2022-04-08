@@ -8,14 +8,15 @@ import (
 )
 
 type post struct {
-	postID   int
-	username string
-	Title    string
-	Content  string
-	Category string
-	PostTime time.Time
-	Likes    int
-	Dislikes int
+	postID      int
+	username    string
+	Title       string
+	Content     string
+	Category    string
+	PostTime    time.Time
+	PostTimeStr string
+	Likes       int
+	Dislikes    int
 }
 
 func newPost(r *http.Request) {
@@ -78,7 +79,8 @@ func displayPostsAndComments() []post {
 	for rows.Next() {
 		var po post
 		rows.Scan(&(po.postID), &(po.username), &(po.Title), &(po.Content), &(po.Category), &(po.PostTime), &(po.Likes), &(po.Dislikes))
-		fmt.Printf("Display Post: %d, by %s, title: %s, content: %s, in %s, at %v, with %d likes, and %d dislikes\n", po.postID, po.username, po.Title, po.Content, po.Category, po.PostTime, po.Likes, po.Dislikes)
+		po.PostTimeStr = po.PostTime.Format("Mon 02-01-2006 15:04:05")
+		fmt.Printf("Display Post: %d, by %s, title: %s, content: %s, in %s, at %v, with %d likes, and %d dislikes\n", po.postID, po.username, po.Title, po.Content, po.Category, po.PostTimeStr, po.Likes, po.Dislikes)
 		pos = append(pos, po)
 	}
 	return pos

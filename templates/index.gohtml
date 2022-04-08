@@ -10,11 +10,11 @@
 <form action="/" method="post" class="forum-form">
     <div>
         <label for="title">Title:</label>
-        <input type="text" id="title" name="postTitle">
+        <input type="text" id="title" name="postTitle" minlength="3" maxlength="50">
     </div>
     <div>
         <label for="content">Content</label>
-        <textarea name="postContent" id="content" cols="30" rows="6"></textarea>
+        <textarea name="postContent" id="content" cols="30" rows="6" minlength="5" maxlength="1000"></textarea>
     </div>
     <fieldset>
         <legend>Choose which categories your post belongs to:</legend>
@@ -48,9 +48,9 @@
     <h3>{{.Title}}</h3>
     <p>{{.Content}}</p>
     <p>{{.Category}}</p>
-    <p>{{.PostTime}}</p>
-    <span>{{.Likes}}</span>
-    <span>{{.Dislikes}}</span>
+    <p>{{.PostTimeStr}}</p>
+    <span>Likes: {{.Likes}} </span>
+    <span>Dislikes: {{.Dislikes}}</span>
 </div>
 {{end}}
 {{template "footer"}}
