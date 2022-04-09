@@ -14,6 +14,16 @@ func loggedIn(r *http.Request) bool {
 	if err != nil {
 		return false
 	}
+	// var sid string
+	// rows, err := db.Query("SELECT username, sessionID FROM sessions WHERE sessionID = ?;", c.Value)
+	// if err != nil {
+	// 	http.Error(w, "Error when verifying logged in status", http.StatusInternalServerError)
+	// 	return false
+	// }
+	// defer rows.Close()
+	// for rows.Next() {
+	// 	rows.Scan(&sid)
+	// }
 	return true
 }
 
@@ -29,10 +39,7 @@ func processLogin(w http.ResponseWriter, r *http.Request) {
 	var unameDB string
 	var hashDB []byte
 
-	rows, err := db.Query(`
-	SELECT username, password FROM users
-	WHERE username = ?
-	`, uname)
+	rows, err := db.Query("SELECT username, password FROM users WHERE username = ?;", uname)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -64,31 +71,30 @@ func processLogin(w http.ResponseWriter, r *http.Request) {
 }
 
 func processLogout(w http.ResponseWriter, r *http.Request) {
-	if loggedIn(r) {
-		c, _ := r.Cookie("session")
-		fmt.Printf("cookie sid to be removed: %s", c.Value)
-		stmt, err := db.Prepare("DELETE FROM sessions WHERE sessionID=?")
-		if err != nil {
-			log.Fatal(err)
-		}
-		defer stmt.Close()
-		stmt.Exec(c.Value)
-
-		//test
-		var sessionID string
-		rows, err := db.Query("SELECT * FROM sessions")
-		for rows.Next() {
-			rows.Scan(&sessionID)
-		}
-		fmt.Printf("cookie sid removed: %s", sessionID) // empty is correct
-
-		_, err = r.Cookie("session")
-		if err == nil {
-			http.SetCookie(w, &http.Cookie{
-				Name:   "session",
-				Value:  "",
-				MaxAge: -1,
-			})
-		}
+	c, _ := r.Cookie("session")
+	fmt.Printf("cookie sid to be removed: %s", c.Value)
+	stmt, err := db.Prepare("DELETE FROM sessions WHERE sessionID=?")
+	if err != nil {
+		log.Fatal(err)
 	}
+	defer stmt.Close()
+	stmt.Exec(c.Value)
+
+	//test
+	var sessionID string
+	rows, err := db.Query("SELECT * FROM sessions")
+	for rows.Next() {
+		rows.Scan(&sessionID)
+	}
+	fmt.Printf("cookie sid removed: %s", sessionID) // empty is correct
+
+	_, err = r.Cookie("session")
+	if err == nil {
+		http.SetCookie(w, &http.Cookie{
+			Name:   "session",
+			Value:  "",
+			MaxAge: -1,
+		})
+	}
+
 }

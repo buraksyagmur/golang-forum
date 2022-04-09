@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strconv"
 	"time"
 )
 
@@ -28,6 +29,10 @@ func newPost(r *http.Request) {
 	postTitle := r.PostForm.Get("postTitle")
 	postCat := r.PostForm["postCat"]
 	// fmt.Println(postCon)
+	// liked := r.PostForm.Get("like")
+	// // disliked := r.PostForm.Get("dislike")
+	// fmt.Println("-----------")
+	// fmt.Println(liked)
 
 	stmt, err := db.Prepare("INSERT INTO posts (username, title, content, category, postTime, likes, dislikes) VALUES (?,?,?,?,?,?,?);")
 	if err != nil {
@@ -67,6 +72,19 @@ func newPost(r *http.Request) {
 	// 	rows.Scan(&pid, &un, &t, &con, &cat, &pT, &l, &d)
 	// 	fmt.Printf("Post: %d, by %s, Title: %s, content: %s, in %s, at %v, with %d likes, and %d dislikes\n", pid, un, t, con, cat, pT, l, d)
 	// }
+}
+
+func addOne(r *http.Request) {
+	numOfLikesStr := r.PostForm.Get("like")
+	numOfLikes, err := strconv.Atoi(numOfLikesStr)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println("-----------")
+	fmt.Printf("likes: %d\n", numOfLikes)
+	fmt.Println("-----------")
+
+	// disliked := r.PostForm.Get("dislike")
 }
 
 func displayPostsAndComments() []post {

@@ -18,7 +18,6 @@ import (
 // }
 
 func regNewUser(w http.ResponseWriter, r *http.Request) {
-
 	err := r.ParseForm()
 	if err != nil {
 		log.Fatal(err)
@@ -28,7 +27,7 @@ func regNewUser(w http.ResponseWriter, r *http.Request) {
 	password := []byte(r.PostForm.Get("password"))
 
 	// check if exists
-	
+
 	hash, err := bcrypt.GenerateFromPassword(password, 10)
 	if err != nil {
 		log.Fatal(err)

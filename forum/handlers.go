@@ -24,15 +24,17 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	if r.Method == "POST" {
 		newPost(r)
+		addOne(r)
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 	}
 }
 
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
+	if loggedIn(r) {
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+		return
+	}
 	if r.Method == "GET" {
-		if loggedIn(r) {
-			// redirect
-		}
 		tpl, err := template.ParseFiles("./templates/header.gohtml", "./templates/footer.gohtml", "./templates/login.gohtml")
 		if err != nil {
 			log.Fatal(err)
@@ -47,6 +49,10 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func RegisterHandler(w http.ResponseWriter, r *http.Request) {
+	if loggedIn(r) {
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+		return
+	}
 	if r.Method == "GET" {
 		tpl, err := template.ParseFiles("./templates/header.gohtml", "./templates/footer.gohtml", "./templates/register.gohtml")
 		if err != nil {
@@ -61,7 +67,9 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func LogoutHanler(w http.ResponseWriter, r *http.Request) {
-	processLogout(w, r)
+	if loggedIn(r) {
+		processLogout(w, r)
+	}
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 

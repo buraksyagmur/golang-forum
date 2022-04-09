@@ -1,13 +1,6 @@
 {{template "header"}}
 <h1>Welcome to Our Forum!</h1>
-<nav class="nav-bar">
-    <ul class="nav-bar-links">
-        <li class="nav-bar-item"><a href="register">Register</a></li>
-        <li class="nav-bar-item"><a href="login">Login</a></li>
-        <li class="nav-bar-item"><a href="logout">Logout</a></li>
-    </ul>
-</nav>
-<form action="/" method="post" class="forum-form">
+<form method="post" class="forum-form">
     <div>
         <label for="title">Title:</label>
         <input type="text" id="title" name="postTitle" minlength="3" maxlength="50">
@@ -49,8 +42,14 @@
     <p>{{.Content}}</p>
     <p>{{.Category}}</p>
     <p>{{.PostTimeStr}}</p>
-    <span>Likes: {{.Likes}} </span>
-    <span>Dislikes: {{.Dislikes}}</span>
+    <form method="POST">
+        <button type="submit" name="like" value="{{.Likes}}">Like</button>
+        <span>{{.Likes}}</span>
+    </form>
+    <form method="POST">
+        <button type="submit" name="dislike" value="{{.Dislikes}}">Dislike</button>
+        <span>{{.Dislikes}}</span>
+    </form>
 </div>
 {{end}}
 {{template "footer"}}
