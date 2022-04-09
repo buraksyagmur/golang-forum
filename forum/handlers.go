@@ -41,7 +41,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		tpl.ExecuteTemplate(w, "login.gohtml", nil)
 	}
 	if r.Method == "POST" {
-		processLogin(r)
+		processLogin(w, r)
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 	}
 }

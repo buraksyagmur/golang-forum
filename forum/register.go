@@ -9,14 +9,13 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-type user struct {
-	id       int
-	username string
-	email    string
-	password []byte
-	access   int
-	loggedIn bool
-}
+// type user struct {
+// 	Username string
+// 	email    string
+// 	password []byte
+// 	access   int
+// 	loggedIn bool
+// }
 
 func regNewUser(w http.ResponseWriter, r *http.Request) {
 
@@ -27,7 +26,9 @@ func regNewUser(w http.ResponseWriter, r *http.Request) {
 	username := r.PostForm.Get("username")
 	email := r.PostForm.Get("email")
 	password := []byte(r.PostForm.Get("password"))
-	// fmt.Printf("uname: %s, email: %s, pw: %s", newUser.username, newUser.email, newUser.password)
+
+	// check if exists
+	
 	hash, err := bcrypt.GenerateFromPassword(password, 10)
 	if err != nil {
 		log.Fatal(err)
@@ -41,7 +42,6 @@ func regNewUser(w http.ResponseWriter, r *http.Request) {
 	stmt.Exec(username, email, hash, 0, true)
 
 	// test
-	var i int
 	var u string
 	var e string
 	var p []byte
@@ -54,9 +54,10 @@ func regNewUser(w http.ResponseWriter, r *http.Request) {
 	}
 	defer rows.Close()
 	for rows.Next() {
-		rows.Scan(&i, &u, &e, &p, &a, &l)
-		fmt.Printf("%d uname: %s e: %s pw: %s, ac: %d, log: %t\n", i, u, e, p, a, l)
+		rows.Scan(&u, &e, &p, &a, &l)
+
 	}
+	fmt.Printf("uname: %s e: %s pw: %s, ac: %d, log: %t\n", u, e, p, a, l)
 
 	sid := uuid.NewV4()
 	http.SetCookie(w, &http.Cookie{
@@ -73,5 +74,3 @@ func regNewUser(w http.ResponseWriter, r *http.Request) {
 	defer stmt.Close()
 	stmt.Exec(sid.String(), username)
 }
-
-// some bug
