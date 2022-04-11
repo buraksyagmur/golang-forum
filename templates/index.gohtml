@@ -42,12 +42,12 @@
     <p>{{.Content}}</p>
     <p>{{.Category}}</p>
     <p>{{.PostTimeStr}}</p>
-    <form method="POST">
-        <button type="submit" name="like" value="{{.Likes}}">Like</button>
+    <form method="post">
+        <button type="submit" name="like" value="{{.PostID}}-{{.Likes}}">Like</button>
         <span>{{.Likes}}</span>
     </form>
-    <form method="POST">
-        <button type="submit" name="dislike" value="{{.Dislikes}}">Dislike</button>
+    <form method="post">
+        <button type="submit" name="dislike" value="{{.PostID}}-{{.Dislikes}}">Dislike</button>
         <span>{{.Dislikes}}</span>
     </form>
 </div>
