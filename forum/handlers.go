@@ -23,7 +23,8 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	if r.Method == "POST" {
-		newPost(r)
+		processPost(r)
+		// processPostAndComment(r)
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 	}
 }

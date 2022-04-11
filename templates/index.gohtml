@@ -50,6 +50,11 @@
         <button type="submit" name="dislike" value="{{.PostID}}-{{.Dislikes}}">Dislike</button>
         <span>{{.Dislikes}}</span>
     </form>
+    <form action="post">
+        <label for="comment">comment: </label>
+        <textarea type="text" id="comment" name="comment" rows="1" cols="30"></textarea>
+
+    </form>
 </div>
 {{end}}
 {{template "footer"}}

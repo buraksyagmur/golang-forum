@@ -9,6 +9,15 @@ import (
 	"time"
 )
 
+type comment struct {
+	CommentID      int
+	Content        string
+	CommentTime    time.Time
+	CommentTimeStr string
+	Likes          int
+	Dislikes       int
+}
+
 type post struct {
 	PostID      int
 	username    string
@@ -19,9 +28,20 @@ type post struct {
 	PostTimeStr string
 	Likes       int
 	Dislikes    int
+	Comments    []comment
 }
 
-func newPost(r *http.Request) {
+func processPostAndComment(r *http.Request) {
+	// err := r.PostForm()
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+	// if filter
+	// if post
+	// if comment
+}
+
+func processPost(r *http.Request) {
 	err := r.ParseForm()
 	if err != nil {
 		log.Fatal(err)
@@ -43,7 +63,6 @@ func newPost(r *http.Request) {
 		}
 		defer stmt.Close()
 		stmt.Exec(numOfLikes, updatePostID)
-
 	} else if idNumOfDislikesStr != "" {
 		idNumOfDislikesStrSlice := strings.Split(idNumOfDislikesStr, "-")
 		updatePostID := idNumOfDislikesStrSlice[0]
@@ -58,16 +77,11 @@ func newPost(r *http.Request) {
 		}
 		defer stmt.Close()
 		stmt.Exec(numOfDislikes, updatePostID)
-		displayPostsAndComments()
 	} else {
 		postCon := r.PostForm.Get("postContent")
 		postTitle := r.PostForm.Get("postTitle")
 		postCat := r.PostForm["postCat"]
 		// fmt.Println(postCon)
-		// liked := r.PostForm.Get("like")
-		// // disliked := r.PostForm.Get("dislike")
-		// fmt.Println("-----------")
-		// fmt.Println(liked)
 
 		stmt, err := db.Prepare("INSERT INTO posts (username, title, content, category, postTime, likes, dislikes) VALUES (?,?,?,?,?,?,?);")
 		if err != nil {
@@ -84,7 +98,7 @@ func newPost(r *http.Request) {
 				postCatStr += postCat[i]
 			}
 		}
-		stmt.Exec("DC", postTitle, postCon, postCatStr, time.Now(), 7, 10)
+		stmt.Exec("DC", postTitle, postCon, postCatStr, time.Now(), 0, 0)
 		// stmt.Exec("ST", postTitle, postCon, postCatStr, time.Now().Add(time.Minute*20), 3, 16)
 
 		// test
@@ -109,8 +123,37 @@ func newPost(r *http.Request) {
 		// }
 	}
 }
+func processComment(r *http.Request) {
+
+}
+
+func displayComments(postID int) []comment {
+	var coms []comment
+	rows, err := db.Query(`
+	SELECT * 
+	FROM posts
+	LEFT JOIN comments
+		ON posts.postID = comments.postID
+	WHERE comments.postID = ?
+	`, postID)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var com comment
+		rows.Scan(&(com.CommentID), &(com.Content), &(com.CommentTime), &(com.Likes), &(com.Dislikes))
+		com.CommentTimeStr = com.CommentTime.Format("Mon 02-01-2006 15:04:05")
+		coms = append(coms, com)
+	}
+
+	return coms
+}
 
 func displayPostsAndComments() []post {
+	// if filtered
+
 	var pos []post
 	rows, err := db.Query("SELECT * FROM posts")
 	if err != nil {
@@ -122,7 +165,16 @@ func displayPostsAndComments() []post {
 		rows.Scan(&(po.PostID), &(po.username), &(po.Title), &(po.Content), &(po.Category), &(po.PostTime), &(po.Likes), &(po.Dislikes))
 		po.PostTimeStr = po.PostTime.Format("Mon 02-01-2006 15:04:05")
 		fmt.Printf("Display Post: %d, by %s, title: %s, content: %s, in %s, at %v, with %d likes, and %d dislikes\n", po.PostID, po.username, po.Title, po.Content, po.Category, po.PostTimeStr, po.Likes, po.Dislikes)
+
+		po.Comments = displayComments(po.PostID)
 		pos = append(pos, po)
 	}
+	// for p := 0; p < len(pos); p++ {
+	// }
+
 	return pos
 }
+
+// func filterPost(r *http.Request) {
+// 	r.ParseForm()
+// }
