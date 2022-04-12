@@ -20,7 +20,7 @@ type comment struct {
 
 type post struct {
 	PostID      int
-	username    string
+	Username    string
 	Title       string
 	Content     string
 	Category    string
@@ -98,7 +98,7 @@ func processPost(r *http.Request) {
 				postCatStr += postCat[i]
 			}
 		}
-		stmt.Exec("DC", postTitle, postCon, postCatStr, time.Now(), 0, 0)
+		stmt.Exec(forumUser.Username, postTitle, postCon, postCatStr, time.Now(), 0, 0)
 		// stmt.Exec("ST", postTitle, postCon, postCatStr, time.Now().Add(time.Minute*20), 3, 16)
 
 		// test
@@ -162,9 +162,10 @@ func displayPostsAndComments() []post {
 	defer rows.Close()
 	for rows.Next() {
 		var po post
-		rows.Scan(&(po.PostID), &(po.username), &(po.Title), &(po.Content), &(po.Category), &(po.PostTime), &(po.Likes), &(po.Dislikes))
+		po.Username = forumUser.Username
+		rows.Scan(&(po.PostID), &(forumUser.Username), &(po.Title), &(po.Content), &(po.Category), &(po.PostTime), &(po.Likes), &(po.Dislikes))
 		po.PostTimeStr = po.PostTime.Format("Mon 02-01-2006 15:04:05")
-		fmt.Printf("Display Post: %d, by %s, title: %s, content: %s, in %s, at %v, with %d likes, and %d dislikes\n", po.PostID, po.username, po.Title, po.Content, po.Category, po.PostTimeStr, po.Likes, po.Dislikes)
+		fmt.Printf("Display Post: %d, by %s, title: %s, content: %s, in %s, at %v, with %d likes, and %d dislikes\n", po.PostID, po.Username, po.Title, po.Content, po.Category, po.PostTimeStr, po.Likes, po.Dislikes)
 
 		po.Comments = displayComments(po.PostID)
 		pos = append(pos, po)

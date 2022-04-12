@@ -53,6 +53,7 @@
     <p>{{.Content}}</p>
     <p>{{.Category}}</p>
     <p>{{.PostTimeStr}}</p>
+    <p>by {{.Username}}</p>
     <form method="post">
         <button type="submit" name="like" value="{{.PostID}}-{{.Likes}}">Like</button>
         <span>{{.Likes}}</span>

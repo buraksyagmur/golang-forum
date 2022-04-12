@@ -57,7 +57,7 @@ func processLogin(w http.ResponseWriter, r *http.Request) {
 	fmt.Printf("DB pw: %s, entered: %s\n", hashDB, hash)
 	if err != nil {
 		http.Error(w, "Username or Password not matched, please try again", http.StatusForbidden)
-		http.Redirect(w, r, "/login", http.StatusSeeOther)
+		http.Redirect(w, r, "/login", http.StatusSeeOther) // not working
 		return
 	}
 
@@ -68,6 +68,17 @@ func processLogin(w http.ResponseWriter, r *http.Request) {
 		Value:  sid.String(),
 		MaxAge: 1800,
 	})
+
+	forumUser.Username = unameDB
+	forumUser.Access = 1
+	forumUser.LoggedIn = true
+
+	stmt, err := db.Prepare("UPDATE users SET loggedIn = ? WHERE username = ?;")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer stmt.Close()
+	stmt.Exec(true, unameDB)
 }
 
 func processLogout(w http.ResponseWriter, r *http.Request) {
@@ -97,4 +108,12 @@ func processLogout(w http.ResponseWriter, r *http.Request) {
 		})
 	}
 
+	stmt, err = db.Prepare("UPDATE users SET loggedIn = ? WHERE username = ?;")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer stmt.Close()
+	stmt.Exec(false, forumUser.Username)
+
+	forumUser = user{}
 }
