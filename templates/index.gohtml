@@ -35,6 +35,17 @@
     <button type="submit">Post</button>
 </form>
 
+<h3>Filter</h3>
+<label for="category">Please choose a category:</label>
+<select name="category" id="category">
+    <option value="">-Please choose a category</option>
+    <option value="ai">AI</option>
+    <option value="blockchain">Blockchain</option>
+    <option value="cybersecurity">Cybersecurity</option>
+    <option value="mobile">Mobile Development</option>
+    <option value="videogames">Videogames</option>
+</select>
+
 <h2>Message Board</h2>
 {{range .}}
 <div class="forum-post">
