@@ -9,28 +9,6 @@ import (
 	"time"
 )
 
-type comment struct {
-	CommentID      int
-	Content        string
-	CommentTime    time.Time
-	CommentTimeStr string
-	Likes          int
-	Dislikes       int
-}
-
-type post struct {
-	PostID      int
-	Username    string
-	Title       string
-	Content     string
-	Category    string
-	PostTime    time.Time
-	PostTimeStr string
-	Likes       int
-	Dislikes    int
-	Comments    []comment
-}
-
 func processPostAndComment(r *http.Request) {
 	// err := r.PostForm()
 	// if err != nil {

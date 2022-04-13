@@ -124,5 +124,5 @@ func processLogout(w http.ResponseWriter, r *http.Request) {
 
 	forumUser = user{}
 	fmt.Printf("forumUser username should be empty: %s\n", forumUser.Username)
-	fmt.Printf("forumUser Access should be 0: %d\n", forumUser.Access)
+	fmt.Printf("forumUser Access should be 0 (nil value): %d\n", forumUser.Access)
 }

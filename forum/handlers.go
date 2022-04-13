@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-var gh int
+// var gh int
 
 func HomeHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {

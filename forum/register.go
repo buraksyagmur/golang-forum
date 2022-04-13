@@ -9,14 +9,6 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-type user struct {
-	Username string
-	Access   int // 0 means no access
-	LoggedIn bool
-	Posts    []post
-	Comments []comment
-}
-
 var forumUser user
 
 func regNewUser(w http.ResponseWriter, r *http.Request) {
