@@ -8,6 +8,8 @@ import (
 )
 
 // var gh int
+// type indexData struct {
+// }
 
 func HomeHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
@@ -21,7 +23,14 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 
 		pos := displayPostsAndComments()
 
-		err = tpl.ExecuteTemplate(w, "index.gohtml", pos)
+		data := struct {
+			CurUser user
+			Posts   []post
+		}{
+			forumUser,
+			pos,
+		}
+		err = tpl.ExecuteTemplate(w, "index.gohtml", data)
 		if err != nil {
 			http.Error(w, "Executing Error", http.StatusInternalServerError)
 		}
