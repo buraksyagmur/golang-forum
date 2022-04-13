@@ -47,15 +47,22 @@
 </select>
 
 <h2>Message Board</h2>
-{{range .}}
+{{range .Posts}}
 <div class="forum-post">
     <h3>{{.Title}}</h3>
     <p>{{.Content}}</p>
     <p>{{.Category}}</p>
     <p>{{.PostTimeStr}}</p>
+    <p>by {{.username}}</p>
     <form method="post">
+
+  {{.userinfo}}
         <button type="submit" name="like" value="{{.PostID}}-{{.Likes}}">Like</button>
         <span>{{.Likes}}</span>
+      
+      
+       
+    
     </form>
     <form method="post">
         <button type="submit" name="dislike" value="{{.PostID}}-{{.Dislikes}}">Dislike</button>
@@ -67,5 +74,7 @@
 
     </form>
 </div>
-{{end}}
+
+
+   {{end}}
 {{template "footer"}}

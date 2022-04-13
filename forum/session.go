@@ -68,6 +68,17 @@ func processLogin(w http.ResponseWriter, r *http.Request) {
 		Value:  sid.String(),
 		MaxAge: 1800,
 	})
+
+	forumUser.Username = unameDB
+	forumUser.Access = 1
+	forumUser.LoggedIn = true
+
+	stmt, err := db.Prepare("UPDATE users SET loggedIn = ? WHERE username = ?;")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer stmt.Close()
+	stmt.Exec(true, unameDB)
 }
 
 func processLogout(w http.ResponseWriter, r *http.Request) {
@@ -80,7 +91,7 @@ func processLogout(w http.ResponseWriter, r *http.Request) {
 	defer stmt.Close()
 	stmt.Exec(c.Value)
 
-	//test
+	// test
 	var sessionID string
 	rows, err := db.Query("SELECT * FROM sessions")
 	for rows.Next() {
@@ -96,5 +107,12 @@ func processLogout(w http.ResponseWriter, r *http.Request) {
 			MaxAge: -1,
 		})
 	}
+	stmt, err = db.Prepare("UPDATE users SET loggedIn = ? WHERE username = ?;")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer stmt.Close()
+	stmt.Exec(false, forumUser.Username)
 
+	forumUser = user{}
 }

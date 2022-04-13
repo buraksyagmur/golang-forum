@@ -1,10 +1,16 @@
 package forum
 
 import (
+	"fmt"
 	"html/template"
 	"log"
 	"net/http"
 )
+
+type mainPageData struct {
+	userinfo user
+	Posts    []post
+}
 
 func HomeHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
@@ -17,7 +23,12 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 
 		pos := displayPostsAndComments()
 
-		err = tpl.ExecuteTemplate(w, "index.gohtml", pos)
+		data := mainPageData{
+			Posts:    pos,
+			userinfo: forumUser,
+		}
+		fmt.Println("---------", forumUser)
+		err = tpl.ExecuteTemplate(w, "index.gohtml", data)
 		if err != nil {
 			http.Error(w, "Executing Error", http.StatusInternalServerError)
 		}

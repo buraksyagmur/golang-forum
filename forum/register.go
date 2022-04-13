@@ -9,20 +9,22 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-// type user struct {
-// 	Username string
-// 	email    string
-// 	password []byte
-// 	access   int
-// 	loggedIn bool
-// }
+type user struct {
+	Username string
+	Access   int // 0 means no access
+	LoggedIn bool
+	Posts    []post
+	Comments []comment
+}
+
+var forumUser user
 
 func regNewUser(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()
 	if err != nil {
 		log.Fatal(err)
 	}
-	username := r.PostForm.Get("username")
+	uname := r.PostForm.Get("username")
 	email := r.PostForm.Get("email")
 	password := []byte(r.PostForm.Get("password"))
 
@@ -38,7 +40,7 @@ func regNewUser(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 	defer stmt.Close()
-	stmt.Exec(username, email, hash, 0, true)
+	stmt.Exec(uname, email, hash, 1, true)
 
 	// test
 	var u string
@@ -54,9 +56,11 @@ func regNewUser(w http.ResponseWriter, r *http.Request) {
 	defer rows.Close()
 	for rows.Next() {
 		rows.Scan(&u, &e, &p, &a, &l)
-
 	}
 	fmt.Printf("uname: %s e: %s pw: %s, ac: %d, log: %t\n", u, e, p, a, l)
+
+	forumUser.Username = uname
+	// forumUser.LoggedIn = true
 
 	sid := uuid.NewV4()
 	http.SetCookie(w, &http.Cookie{
@@ -71,5 +75,5 @@ func regNewUser(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 	defer stmt.Close()
-	stmt.Exec(sid.String(), username)
+	stmt.Exec(sid.String(), uname)
 }
