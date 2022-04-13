@@ -22,13 +22,16 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		pos := displayPostsAndComments()
+		allForumUnames := allForumUnames()
 
 		data := struct {
-			CurUser user
-			Posts   []post
+			CurUser     user
+			Posts       []post
+			ForumUnames []string
 		}{
 			forumUser,
 			pos,
+			allForumUnames,
 		}
 		err = tpl.ExecuteTemplate(w, "index.gohtml", data)
 		if err != nil {
@@ -37,10 +40,10 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	if r.Method == "POST" {
 		r.ParseForm()
-		filterCategory := r.PostForm.Get("category")
+		filterCategory := r.PostForm.Get("category-filter")
 		fmt.Printf("Filter Category %s\n", filterCategory)
 		if filterCategory != "" {
-			fmt.Printf("Filter Category %s", filterCategory)
+			fmt.Printf("Filter Category %s\n", filterCategory)
 		} else {
 
 		}
