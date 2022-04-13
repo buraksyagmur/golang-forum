@@ -50,6 +50,7 @@ func processPost(r *http.Request) {
 	idNumOfDislikesStr := r.PostForm.Get("dislike")
 
 	if idNumOfLikesStr != "" {
+		fmt.Printf("forumUser username when liking post: %s\n", forumUser.Username)
 		idNumOfLikesStrSlice := strings.Split(idNumOfLikesStr, "-")
 		updatePostID := idNumOfLikesStrSlice[0]
 		numOfLikes, err := strconv.Atoi(idNumOfLikesStrSlice[1])
@@ -64,6 +65,7 @@ func processPost(r *http.Request) {
 		defer stmt.Close()
 		stmt.Exec(numOfLikes, updatePostID)
 	} else if idNumOfDislikesStr != "" {
+		fmt.Printf("forumUser username when disliking post: %s\n", forumUser.Username)
 		idNumOfDislikesStrSlice := strings.Split(idNumOfDislikesStr, "-")
 		updatePostID := idNumOfDislikesStrSlice[0]
 		numOfDislikes, err := strconv.Atoi(idNumOfDislikesStrSlice[1])
@@ -78,6 +80,7 @@ func processPost(r *http.Request) {
 		defer stmt.Close()
 		stmt.Exec(numOfDislikes, updatePostID)
 	} else {
+		fmt.Printf("forumUser username when inserting new post: %s\n", forumUser.Username)
 		postCon := r.PostForm.Get("postContent")
 		postTitle := r.PostForm.Get("postTitle")
 		postCat := r.PostForm["postCat"]
@@ -153,7 +156,7 @@ func displayComments(postID int) []comment {
 
 func displayPostsAndComments() []post {
 	// if filtered
-
+	fmt.Printf("forumUser username when display post: %s\n", forumUser.Username)
 	var pos []post
 	rows, err := db.Query("SELECT * FROM posts")
 	if err != nil {
@@ -162,10 +165,9 @@ func displayPostsAndComments() []post {
 	defer rows.Close()
 	for rows.Next() {
 		var po post
-		po.Username = forumUser.Username
-		rows.Scan(&(po.PostID), &(forumUser.Username), &(po.Title), &(po.Content), &(po.Category), &(po.PostTime), &(po.Likes), &(po.Dislikes))
+		rows.Scan(&(po.PostID), &(po.Username), &(po.Title), &(po.Content), &(po.Category), &(po.PostTime), &(po.Likes), &(po.Dislikes))
 		po.PostTimeStr = po.PostTime.Format("Mon 02-01-2006 15:04:05")
-		fmt.Printf("Display Post: %d, by %s, title: %s, content: %s, in %s, at %v, with %d likes, and %d dislikes\n", po.PostID, po.Username, po.Title, po.Content, po.Category, po.PostTimeStr, po.Likes, po.Dislikes)
+		// fmt.Printf("Display Post: %d, by %s, title: %s, content: %s, in %s, at %v, with %d likes, and %d dislikes\n", po.PostID, po.Username, po.Title, po.Content, po.Category, po.PostTimeStr, po.Likes, po.Dislikes)
 
 		po.Comments = displayComments(po.PostID)
 		pos = append(pos, po)

@@ -61,7 +61,8 @@ func regNewUser(w http.ResponseWriter, r *http.Request) {
 	fmt.Printf("uname: %s e: %s pw: %s, ac: %d, log: %t\n", u, e, p, a, l)
 
 	forumUser.Username = uname
-	// forumUser.LoggedIn = true
+	forumUser.LoggedIn = true
+	forumUser.Access = 1
 
 	sid := uuid.NewV4()
 	http.SetCookie(w, &http.Cookie{
@@ -69,7 +70,8 @@ func regNewUser(w http.ResponseWriter, r *http.Request) {
 		Value:  sid.String(),
 		MaxAge: 1800,
 	})
-	// fmt.Println(sid.String())
+	fmt.Printf("reg sid: %s\n", sid)
+	fmt.Printf("Reg and login as %s\n", forumUser.Username)
 
 	stmt, err = db.Prepare("INSERT INTO sessions (sessionID, username) VALUES (?,?);")
 	if err != nil {

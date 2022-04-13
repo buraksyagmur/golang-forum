@@ -17,6 +17,7 @@ func main() {
 	http.HandleFunc("/login", forum.LoginHandler)
 	http.HandleFunc("/register", forum.RegisterHandler)
 	http.HandleFunc("/logout", forum.LogoutHanler)
+	// http.HandleFunc("/delete", forum.DeleteHandler)
 	fmt.Println("Starting server at port 8080")
 
 	err := http.ListenAndServe(":8080", nil)

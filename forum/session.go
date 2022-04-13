@@ -39,6 +39,7 @@ func processLogin(w http.ResponseWriter, r *http.Request) {
 	var unameDB string
 	var hashDB []byte
 
+	fmt.Printf("%s trying to Login\n", uname)
 	rows, err := db.Query("SELECT username, password FROM users WHERE username = ?;", uname)
 	if err != nil {
 		log.Fatal(err)
@@ -60,9 +61,10 @@ func processLogin(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/login", http.StatusSeeOther) // not working
 		return
 	}
+	fmt.Printf("%s (name from DB) Login successfully\n", unameDB)
 
 	sid := uuid.NewV4()
-	fmt.Println(sid)
+	fmt.Printf("login sid: %s\n", sid)
 	http.SetCookie(w, &http.Cookie{
 		Name:   "session",
 		Value:  sid.String(),
@@ -72,18 +74,19 @@ func processLogin(w http.ResponseWriter, r *http.Request) {
 	forumUser.Username = unameDB
 	forumUser.Access = 1
 	forumUser.LoggedIn = true
+	fmt.Printf("%s forum User Login\n", forumUser.Username)
 
 	stmt, err := db.Prepare("UPDATE users SET loggedIn = ? WHERE username = ?;")
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer stmt.Close()
-	stmt.Exec(true, unameDB)
+	stmt.Exec(true, forumUser.Username)
 }
 
 func processLogout(w http.ResponseWriter, r *http.Request) {
 	c, _ := r.Cookie("session")
-	fmt.Printf("cookie sid to be removed: %s", c.Value)
+	fmt.Printf("cookie sid to be removed (have value): %s\n", c.Value)
 	stmt, err := db.Prepare("DELETE FROM sessions WHERE sessionID=?")
 	if err != nil {
 		log.Fatal(err)
@@ -97,7 +100,7 @@ func processLogout(w http.ResponseWriter, r *http.Request) {
 	for rows.Next() {
 		rows.Scan(&sessionID)
 	}
-	fmt.Printf("cookie sid removed: %s", sessionID) // empty is correct
+	fmt.Printf("cookie sid removed (should be empty): %s\n", sessionID) // empty is correct
 
 	_, err = r.Cookie("session")
 	if err == nil {
@@ -107,6 +110,7 @@ func processLogout(w http.ResponseWriter, r *http.Request) {
 			MaxAge: -1,
 		})
 	}
+	fmt.Printf("%s Logout\n", forumUser.Username)
 
 	stmt, err = db.Prepare("UPDATE users SET loggedIn = ? WHERE username = ?;")
 	if err != nil {
@@ -114,6 +118,11 @@ func processLogout(w http.ResponseWriter, r *http.Request) {
 	}
 	defer stmt.Close()
 	stmt.Exec(false, forumUser.Username)
+	// test
+	fmt.Printf("forumUser username: %s\n", forumUser.Username)
+	fmt.Printf("Access should be 1: %d\n", forumUser.Access)
 
 	forumUser = user{}
+	fmt.Printf("forumUser username should be empty: %s\n", forumUser.Username)
+	fmt.Printf("forumUser Access should be 0: %d\n", forumUser.Access)
 }
