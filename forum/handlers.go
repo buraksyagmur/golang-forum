@@ -7,9 +7,11 @@ import (
 	"net/http"
 )
 
-// var gh int
-// type indexData struct {
-// }
+type mainPageData struct {
+	userinfo    user
+	Posts       []post
+	ForumUnames []string
+}
 
 func HomeHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
@@ -24,15 +26,12 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 		pos := displayPostsAndComments()
 		allForumUnames := allForumUnames()
 
-		data := struct {
-			CurUser     user
-			Posts       []post
-			ForumUnames []string
-		}{
-			forumUser,
-			pos,
-			allForumUnames,
+		data := mainPageData{
+			Posts:       pos,
+			userinfo:    forumUser,
+			ForumUnames: allForumUnames,
 		}
+		fmt.Println("---------", forumUser)
 		err = tpl.ExecuteTemplate(w, "index.gohtml", data)
 		if err != nil {
 			http.Error(w, "Executing Error", http.StatusInternalServerError)

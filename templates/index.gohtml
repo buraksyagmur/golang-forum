@@ -64,10 +64,10 @@
     <p>{{.Content}}</p>
     <p>{{.Category}}</p>
     <p>{{.PostTimeStr}}</p>
-    <p>by {{.Username}}</p>
+    <p>by {{.username}}</p>
     <form method="post">
         <button type="submit" name="like" value="{{.PostID}}-{{.Likes}}">Like</button>
-        <span>{{.Likes}}</span>
+        <span>{{.Likes}}</span> 
     </form>
     <form method="post">
         <button type="submit" name="dislike" value="{{.PostID}}-{{.Dislikes}}">Dislike</button>
@@ -76,8 +76,6 @@
     <form action="post">
         <label for="comment">comment: </label>
         <textarea type="text" id="comment" name="comment" rows="1" cols="30"></textarea>
-
     </form>
 </div>
-{{end}}
 {{template "footer"}}

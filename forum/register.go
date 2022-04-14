@@ -48,13 +48,16 @@ func regNewUser(w http.ResponseWriter, r *http.Request) {
 	defer rows.Close()
 	for rows.Next() {
 		rows.Scan(&u, &e, &p, &a, &l)
-
 	}
 	fmt.Printf("uname: %s e: %s pw: %s, ac: %d, log: %t\n", u, e, p, a, l)
 
 	forumUser.Username = uname
+<<<<<<< HEAD
 	forumUser.LoggedIn = true
 	forumUser.Access = 1
+=======
+	// forumUser.LoggedIn = true
+>>>>>>> front
 
 	sid := uuid.NewV4()
 	http.SetCookie(w, &http.Cookie{

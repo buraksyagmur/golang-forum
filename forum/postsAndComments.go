@@ -104,8 +104,8 @@ func processPost(r *http.Request) {
 		// }
 	}
 }
-func processComment(r *http.Request) {
 
+func processComment(r *http.Request) {
 }
 
 func displayComments(postID int) []comment {
