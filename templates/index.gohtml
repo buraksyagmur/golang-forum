@@ -52,6 +52,7 @@
 <form method="post">
     <label for="author">Please choose an author:</label>
     <select name="author-filter" id="author">
+        <option value="">-Please choose an author</option>
     {{range .ForumUnames}}
         <option value="{{.}}">{{.}}</option>
     {{end}}
@@ -60,22 +61,38 @@
 <h2>Message Board</h2>
 {{range .Posts}}
 <div class="forum-post">
+    <p>{{.Author}}</p>
     <h3>{{.Title}}</h3>
     <p>{{.Content}}</p>
     <p>{{.Category}}</p>
     <p>{{.PostTimeStr}}</p>
-    <p>by {{.Username}}</p>
     <form method="post">
-        <button type="submit" name="like" value="{{.PostID}}-{{.Likes}}">Like</button>
+        <button type="submit" name="po-like" value="{{.PostID}}-{{.Likes}}">Like</button>
         <span>{{.Likes}}</span> 
     </form>
     <form method="post">
-        <button type="submit" name="dislike" value="{{.PostID}}-{{.Dislikes}}">Dislike</button>
+        <button type="submit" name="po-dislike" value="{{.PostID}}-{{.Dislikes}}">Dislike</button>
         <span>{{.Dislikes}}</span>
     </form>
-    <form action="post">
+    {{range .Comments}}
+    <div class="forum-comment">
+        <p>{{.Author}}</p>
+        <p>{{.Content}}</p>
+        <p>{{.CommentTimeStr}}</p>
+        <form action="post">
+            <button type="submit" name="com-like" value="{{.CommentID}}-{{.Likes}}">Like</button>
+            <span>{{.Likes}}</span>
+        </form>
+        <form method="post">
+            <button type="submit" name="com-dislike" value="{{.CommentID}}-{{.Dislikes}}">Dislike</button>
+            <span>{{.Dislikes}}</span>
+        </form>
+    </div>
+    {{end}}
+    <form method="post">
         <label for="comment">comment: </label>
         <textarea type="text" id="comment" name="comment" rows="1" cols="30"></textarea>
+        <button type="submit" name="post-id" value="{{.PostID}}">Comment</button>
     </form>
 </div>
 {{end}}

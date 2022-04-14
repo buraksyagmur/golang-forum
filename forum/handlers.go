@@ -46,7 +46,8 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 		} else {
 
 		}
-		processPost(r)
+		// processPost(r)
+		processComment(r)
 		// processPostAndComment(r)
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 	}

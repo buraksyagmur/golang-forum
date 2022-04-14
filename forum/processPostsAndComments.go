@@ -106,6 +106,32 @@ func processPost(r *http.Request) {
 }
 
 func processComment(r *http.Request) {
-	r.ParseForm()
-	idNumOfLikesStr := r.PostForm("com-like")
+	err := r.ParseForm()
+	if err != nil {
+		log.Fatal(err)
+	}
+	idNumOfLikesStr := r.PostForm.Get("com-like")
+	idNumOfDislikesStr := r.PostForm.Get("com-dislike")
+	if idNumOfLikesStr != "" {
+		fmt.Printf("forumUser username when liking comment: %s\n", forumUser.Username)
+
+	} else if idNumOfDislikesStr != "" {
+		fmt.Printf("forumUser username when disliking comment: %s\n", forumUser.Username)
+	} else {
+		comCon := r.PostForm.Get("comment")
+		poId := r.PostForm.Get("post-id")
+		fmt.Printf("comment: %s under %s\n", comCon, poId)
+		// stmt, err := db.Prepare(`INSERT INTO comments
+		// (author, )
+		// `)
+		// if err != nil {
+		// 	log.Fatal(err)
+		// }
+		// defer stmt.Close()
+		// stmt.Exec()
+
+		// comTime := Now()
+		// comTimeStr := comTime.time.Format("")
+
+	}
 }
