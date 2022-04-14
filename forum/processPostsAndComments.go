@@ -105,7 +105,7 @@ func processPost(r *http.Request) {
 	}
 }
 
-func processComment(r *http.Request) {
-	r.ParseForm()
-	idNumOfLikesStr := r.PostForm("com-like")
-}
+// func processComment(r *http.Request) {
+// 	r.ParseForm()
+// 	idNumOfLikesStr := r.PostForm("com-like")
+// }

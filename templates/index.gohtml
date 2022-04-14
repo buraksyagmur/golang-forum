@@ -1,9 +1,10 @@
 {{template "header"}}
 <h1>Welcome to Our Forum!</h1>
+ {{if .Userinfo.LoggedIn}}
 <form method="post" class="forum-form">
     <div>
-        <label for="title">Title:</label>
-        <input type="text" id="title" name="postTitle" minlength="3" maxlength="50">
+    <label for="title">Title:</label>
+    <input type="text" id="title" name="postTitle" minlength="3" maxlength="50">
     </div>
     <div>
         <label for="content">Content</label>
@@ -34,7 +35,7 @@
     </fieldset>
     <button type="submit">Post</button>
 </form>
-
+{{end}}
 <h3>Filter by category</h3>
 <form method="post">
 <label for="category">Please choose a category:</label>
@@ -58,19 +59,22 @@
     </select>
 </form>
 <h2>Message Board</h2>
+
+
+{{if .Userinfo.LoggedIn}}
 {{range .Posts}}
 <div class="forum-post">
     <h3>{{.Title}}</h3>
     <p>{{.Content}}</p>
     <p>{{.Category}}</p>
     <p>{{.PostTimeStr}}</p>
-    <p>by {{.Username}}</p>
+    <p>by {{.Author}}</p>
     <form method="post">
-        <button type="submit" name="like" value="{{.PostID}}-{{.Likes}}">Like</button>
+        <button type="submit" name="po-like" value="{{.PostID}}-{{.Likes}}">Like</button>
         <span>{{.Likes}}</span> 
     </form>
     <form method="post">
-        <button type="submit" name="dislike" value="{{.PostID}}-{{.Dislikes}}">Dislike</button>
+        <button type="submit" name="po-dislike" value="{{.PostID}}-{{.Dislikes}}">Dislike</button>
         <span>{{.Dislikes}}</span>
     </form>
     <form action="post">
@@ -78,5 +82,29 @@
         <textarea type="text" id="comment" name="comment" rows="1" cols="30"></textarea>
     </form>
 </div>
+{{end}}
+{{end}}
+{{if not .Userinfo.LoggedIn}}
+{{range .Posts}}
+<div class="forum-post">
+    <h3>{{.Title}}</h3>
+    <p>{{.Content}}</p>
+    <p>{{.Category}}</p>
+    <p>{{.PostTimeStr}}</p>
+    <p>by {{.Author}}</p>
+    <form method="GET" action="login">
+ <button type="submit">Like</button></a>
+        <span>{{.Likes}}</span> 
+    </form>
+    <form method="GET" action="login">
+        <button type="submit">Dislike</button>
+        <span>{{.Dislikes}}</span>
+    </form>
+    <form action="post">
+        <label for="comment">comment: </label>
+        <textarea type="text" id="comment" name="comment" rows="1" cols="30"></textarea>
+    </form>
+</div>
+{{end}}
 {{end}}
 {{template "footer"}}
