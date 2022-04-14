@@ -4,7 +4,7 @@ import "time"
 
 type comment struct {
 	CommentID      int
-	Username       string // author
+	Author         string // author
 	Content        string
 	CommentTime    time.Time
 	CommentTimeStr string
@@ -14,7 +14,7 @@ type comment struct {
 
 type post struct {
 	PostID      int
-	Username    string // author
+	Author      string // author
 	Title       string
 	Content     string
 	Category    string

@@ -64,7 +64,7 @@ func processPost(r *http.Request) {
 		postCat := r.PostForm["postCat"]
 		// fmt.Println(postCon)
 
-		stmt, err := db.Prepare("INSERT INTO posts (username, title, content, category, postTime, likes, dislikes) VALUES (?,?,?,?,?,?,?);")
+		stmt, err := db.Prepare("INSERT INTO posts (author, title, content, category, postTime, likes, dislikes) VALUES (?,?,?,?,?,?,?);")
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -143,9 +143,9 @@ func displayPostsAndComments() []post {
 	defer rows.Close()
 	for rows.Next() {
 		var po post
-		rows.Scan(&(po.PostID), &(po.Username), &(po.Title), &(po.Content), &(po.Category), &(po.PostTime), &(po.Likes), &(po.Dislikes))
+		rows.Scan(&(po.PostID), &(po.Author), &(po.Title), &(po.Content), &(po.Category), &(po.PostTime), &(po.Likes), &(po.Dislikes))
 		po.PostTimeStr = po.PostTime.Format("Mon 02-01-2006 15:04:05")
-		// fmt.Printf("Display Post: %d, by %s, title: %s, content: %s, in %s, at %v, with %d likes, and %d dislikes\n", po.PostID, po.Username, po.Title, po.Content, po.Category, po.PostTimeStr, po.Likes, po.Dislikes)
+		// fmt.Printf("Display Post: %d, by %s, title: %s, content: %s, in %s, at %v, with %d likes, and %d dislikes\n", po.PostID, po.Author, po.Title, po.Content, po.Category, po.PostTimeStr, po.Likes, po.Dislikes)
 
 		po.Comments = displayComments(po.PostID)
 		pos = append(pos, po)
