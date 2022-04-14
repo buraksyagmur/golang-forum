@@ -110,18 +110,14 @@ func processLogout(w http.ResponseWriter, r *http.Request) {
 			MaxAge: -1,
 		})
 	}
-<<<<<<< HEAD
 	fmt.Printf("%s Logout\n", forumUser.Username)
 
-=======
->>>>>>> front
 	stmt, err = db.Prepare("UPDATE users SET loggedIn = ? WHERE username = ?;")
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer stmt.Close()
 	stmt.Exec(false, forumUser.Username)
-<<<<<<< HEAD
 	// test
 	fmt.Printf("forumUser username: %s\n", forumUser.Username)
 	fmt.Printf("Access should be 1: %d\n", forumUser.Access)
@@ -129,8 +125,4 @@ func processLogout(w http.ResponseWriter, r *http.Request) {
 	forumUser = user{}
 	fmt.Printf("forumUser username should be empty: %s\n", forumUser.Username)
 	fmt.Printf("forumUser Access should be 0 (nil value): %d\n", forumUser.Access)
-=======
-
-	forumUser = user{}
->>>>>>> front
 }

@@ -1,5 +1,5 @@
 {{template "header"}}
-<h1>Welcome to Our Forum! {{.CurUser.Username}}!</h1>
+<h1>Welcome to Our Forum!</h1>
 <form method="post" class="forum-form">
     <div>
         <label for="title">Title:</label>
@@ -64,7 +64,7 @@
     <p>{{.Content}}</p>
     <p>{{.Category}}</p>
     <p>{{.PostTimeStr}}</p>
-    <p>by {{.username}}</p>
+    <p>by {{.Username}}</p>
     <form method="post">
         <button type="submit" name="like" value="{{.PostID}}-{{.Likes}}">Like</button>
         <span>{{.Likes}}</span> 
@@ -78,4 +78,5 @@
         <textarea type="text" id="comment" name="comment" rows="1" cols="30"></textarea>
     </form>
 </div>
+{{end}}
 {{template "footer"}}
