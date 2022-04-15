@@ -79,7 +79,7 @@
         <p>{{.Author}}</p>
         <p>{{.Content}}</p>
         <p>{{.CommentTimeStr}}</p>
-        <form action="post">
+        <form method="post">
             <button type="submit" name="com-like" value="{{.PostID}}-{{.CommentID}}-{{.Likes}}">Like</button>
             <span>{{.Likes}}</span>
         </form>

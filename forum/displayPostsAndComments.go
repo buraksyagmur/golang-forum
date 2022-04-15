@@ -1,19 +1,13 @@
 package forum
 
 import (
-	"fmt"
 	"log"
 )
 
 func displayComments(postID int) []comment {
+	// fmt.Printf("postID: %d\n", postID)
 	var coms []comment
-	rows, err := db.Query(`
-	SELECT * 
-	FROM posts
-	LEFT JOIN comments
-		ON posts.postID = comments.postID
-	WHERE comments.postID = ?
-	`, postID)
+	rows, err := db.Query("SELECT commentID, comments.[author] AS commentAuthor, comments.[postID], comments.[content], commentTime, comments.[likes], comments.[dislikes] FROM comments LEFT JOIN posts ON comments.postID = posts.postID	WHERE comments.postID = ?;", postID)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -21,8 +15,10 @@ func displayComments(postID int) []comment {
 
 	for rows.Next() {
 		var com comment
-		rows.Scan(&(com.CommentID), &(com.Content), &(com.CommentTime), &(com.Likes), &(com.Dislikes))
+		rows.Scan(&(com.CommentID), &(com.Author), &(com.PostID), &(com.Content), &(com.CommentTime), &(com.Likes), &(com.Dislikes))
 		com.CommentTimeStr = com.CommentTime.Format("Mon 02-01-2006 15:04:05")
+		// fmt.Printf("CommentID: %d\n", com.CommentID)
+		// fmt.Printf("Comment content: %s\n", com.Content)
 		coms = append(coms, com)
 	}
 
@@ -31,7 +27,7 @@ func displayComments(postID int) []comment {
 
 func displayPostsAndComments() []post {
 	// if filtered
-	fmt.Printf("forumUser username when display post: %s\n", forumUser.Username)
+	// fmt.Printf("forumUser username when display post: %s\n", forumUser.Username)
 	var pos []post
 	rows, err := db.Query("SELECT * FROM posts")
 	if err != nil {
@@ -47,9 +43,6 @@ func displayPostsAndComments() []post {
 		po.Comments = displayComments(po.PostID)
 		pos = append(pos, po)
 	}
-	// for p := 0; p < len(pos); p++ {
-	// }
-
 	return pos
 }
 

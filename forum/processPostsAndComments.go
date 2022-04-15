@@ -9,16 +9,6 @@ import (
 	"time"
 )
 
-func processPostAndComment(r *http.Request) {
-	// err := r.PostForm()
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-	// if filter
-	// if post
-	// if comment
-}
-
 func processPost(r *http.Request) {
 	err := r.ParseForm()
 	if err != nil {
@@ -114,7 +104,6 @@ func processComment(r *http.Request) {
 	idNumOfLikesStr := r.PostForm.Get("com-like")
 	idNumOfDislikesStr := r.PostForm.Get("com-dislike")
 	comCon := r.PostForm.Get("comment")
-
 	if idNumOfLikesStr != "" {
 		fmt.Printf("forumUser username when liking comment: %s\n", forumUser.Username)
 		idNumOfLikesStrSlice := strings.Split(idNumOfLikesStr, "-")
@@ -152,15 +141,12 @@ func processComment(r *http.Request) {
 		fmt.Printf("forumUser username when inserting new comment: %s\n", forumUser.Username)
 		poId := r.PostForm.Get("post-id")
 		fmt.Printf("comment: %s under %s\n", comCon, poId)
-		stmt, err := db.Prepare(`INSERT INTO comments
-		(author, postID, content, commentTime, likes, dislikes)
-		VALUES (?,?,?,?,?,?);
-		`)
+		stmt, err := db.Prepare("INSERT INTO comments (author, postID, content, commentTime, likes, dislikes) VALUES (?,?,?,?,?,?);")
 		if err != nil {
 			log.Fatal(err)
 		}
 		defer stmt.Close()
-		stmt.Exec(forumUser.Username, poId, comCon, time.Now(), 3, 16)
+		stmt.Exec(forumUser.Username, poId, comCon, time.Now(), 0, 0)
 	}
 	return
 }
