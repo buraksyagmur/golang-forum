@@ -26,6 +26,7 @@ func processPost(r *http.Request) {
 	}
 	idNumOfLikesStr := r.PostForm.Get("po-like")
 	idNumOfDislikesStr := r.PostForm.Get("po-dislike")
+	postTitle := r.PostForm.Get("postTitle")
 
 	if idNumOfLikesStr != "" {
 		fmt.Printf("forumUser username when liking post: %s\n", forumUser.Username)
@@ -57,10 +58,9 @@ func processPost(r *http.Request) {
 		}
 		defer stmt.Close()
 		stmt.Exec(numOfDislikes, updatePostID)
-	} else {
+	} else if postTitle != "" {
 		fmt.Printf("forumUser username when inserting new post: %s\n", forumUser.Username)
 		postCon := r.PostForm.Get("postContent")
-		postTitle := r.PostForm.Get("postTitle")
 		postCat := r.PostForm["postCat"]
 		// fmt.Println(postCon)
 
@@ -103,6 +103,7 @@ func processPost(r *http.Request) {
 		// 	fmt.Printf("Post: %d, by %s, Title: %s, content: %s, in %s, at %v, with %d likes, and %d dislikes\n", pid, un, t, con, cat, pT, l, d)
 		// }
 	}
+	return
 }
 
 func processComment(r *http.Request) {
@@ -112,26 +113,54 @@ func processComment(r *http.Request) {
 	}
 	idNumOfLikesStr := r.PostForm.Get("com-like")
 	idNumOfDislikesStr := r.PostForm.Get("com-dislike")
+	comCon := r.PostForm.Get("comment")
+
 	if idNumOfLikesStr != "" {
 		fmt.Printf("forumUser username when liking comment: %s\n", forumUser.Username)
+		idNumOfLikesStrSlice := strings.Split(idNumOfLikesStr, "-")
+		poID := idNumOfLikesStrSlice[0]
+		comID := idNumOfLikesStrSlice[1]
+		NumOfLikes, err := strconv.Atoi(idNumOfLikesStrSlice[2])
+		if err != nil {
+			log.Fatal(err)
+		}
+		NumOfLikes++
+		stmt, err := db.Prepare("UPDATE comments SET likes = ? WHERE postID = ? AND commentID = ?;")
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer stmt.Close()
+		stmt.Exec(NumOfLikes, poID, comID)
 
 	} else if idNumOfDislikesStr != "" {
 		fmt.Printf("forumUser username when disliking comment: %s\n", forumUser.Username)
-	} else {
-		comCon := r.PostForm.Get("comment")
+		idNumOfDislikesStrSlice := strings.Split(idNumOfDislikesStr, "-")
+		poID := idNumOfDislikesStrSlice[0]
+		comID := idNumOfDislikesStrSlice[1]
+		NumOfDislikes, err := strconv.Atoi(idNumOfDislikesStrSlice[2])
+		NumOfDislikes++
+		if err != nil {
+			log.Fatal(err)
+		}
+		stmt, err := db.Prepare("UPDATE comments SET dislikes = ? WHERE postID = ? AND commentID = ?;")
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer stmt.Close()
+		stmt.Exec(NumOfDislikes, poID, comID)
+	} else if comCon != "" {
+		fmt.Printf("forumUser username when inserting new comment: %s\n", forumUser.Username)
 		poId := r.PostForm.Get("post-id")
 		fmt.Printf("comment: %s under %s\n", comCon, poId)
-		// stmt, err := db.Prepare(`INSERT INTO comments
-		// (author, )
-		// `)
-		// if err != nil {
-		// 	log.Fatal(err)
-		// }
-		// defer stmt.Close()
-		// stmt.Exec()
-
-		// comTime := Now()
-		// comTimeStr := comTime.time.Format("")
-
+		stmt, err := db.Prepare(`INSERT INTO comments
+		(author, postID, content, commentTime, likes, dislikes)
+		VALUES (?,?,?,?,?,?);
+		`)
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer stmt.Close()
+		stmt.Exec(forumUser.Username, poId, comCon, time.Now(), 3, 16)
 	}
+	return
 }

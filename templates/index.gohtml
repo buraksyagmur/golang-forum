@@ -3,7 +3,7 @@
 <form method="post" class="forum-form">
     <div>
         <label for="title">Title:</label>
-        <input type="text" id="title" name="postTitle" minlength="3" maxlength="50">
+        <input type="text" id="title" name="postTitle" minlength="3" maxlength="50" required>
     </div>
     <div>
         <label for="content">Content</label>
@@ -80,11 +80,11 @@
         <p>{{.Content}}</p>
         <p>{{.CommentTimeStr}}</p>
         <form action="post">
-            <button type="submit" name="com-like" value="{{.CommentID}}-{{.Likes}}">Like</button>
+            <button type="submit" name="com-like" value="{{.PostID}}-{{.CommentID}}-{{.Likes}}">Like</button>
             <span>{{.Likes}}</span>
         </form>
         <form method="post">
-            <button type="submit" name="com-dislike" value="{{.CommentID}}-{{.Dislikes}}">Dislike</button>
+            <button type="submit" name="com-dislike" value="{{.PostID}}-{{.CommentID}}-{{.Dislikes}}">Dislike</button>
             <span>{{.Dislikes}}</span>
         </form>
     </div>

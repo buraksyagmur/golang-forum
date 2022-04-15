@@ -1,7 +1,6 @@
 package forum
 
 import (
-	"fmt"
 	"html/template"
 	"log"
 	"net/http"
@@ -31,7 +30,7 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 			userinfo:    forumUser,
 			ForumUnames: allForumUnames,
 		}
-		fmt.Println("---------", forumUser)
+		// fmt.Println("---------", forumUser)
 		err = tpl.ExecuteTemplate(w, "index.gohtml", data)
 		if err != nil {
 			http.Error(w, "Executing Error", http.StatusInternalServerError)
@@ -39,14 +38,14 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	if r.Method == "POST" {
 		r.ParseForm()
-		filterCategory := r.PostForm.Get("category-filter")
-		fmt.Printf("Filter Category %s\n", filterCategory)
-		if filterCategory != "" {
-			fmt.Printf("Filter Category %s\n", filterCategory)
-		} else {
+		// filterCategory := r.PostForm.Get("category-filter")
+		// fmt.Printf("Filter Category %s\n", filterCategory)
+		// if filterCategory != "" {
+		// 	fmt.Printf("Filter Category %s\n", filterCategory)
+		// } else {
 
-		}
-		// processPost(r)
+		// }
+		processPost(r)
 		processComment(r)
 		// processPostAndComment(r)
 		http.Redirect(w, r, "/", http.StatusSeeOther)

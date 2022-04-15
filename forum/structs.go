@@ -4,7 +4,8 @@ import "time"
 
 type comment struct {
 	CommentID      int
-	Author         string // author
+	Author         string
+	PostID         int
 	Content        string
 	CommentTime    time.Time
 	CommentTimeStr string
