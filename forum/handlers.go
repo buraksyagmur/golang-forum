@@ -7,7 +7,7 @@ import (
 )
 
 type mainPageData struct {
-	userinfo    user
+	Userinfo    user
 	Posts       []post
 	ForumUnames []string
 }
@@ -27,7 +27,7 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 
 		data := mainPageData{
 			Posts:       pos,
-			userinfo:    forumUser,
+			Userinfo:    forumUser,
 			ForumUnames: allForumUnames,
 		}
 		// fmt.Println("---------", forumUser)

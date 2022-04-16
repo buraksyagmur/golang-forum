@@ -1,5 +1,6 @@
 {{template "header"}}
 <h1>Welcome to Our Forum!</h1>
+ {{if .Userinfo.LoggedIn}}
 <form method="post" class="forum-form">
     <div>
         <label for="title">Title:</label>
@@ -34,7 +35,7 @@
     </fieldset>
     <button type="submit">Post</button>
 </form>
-
+{{end}}
 <h3>Filter by category</h3>
 <form method="post">
 <label for="category">Please choose a category:</label>
@@ -59,6 +60,9 @@
     </select>
 </form>
 <h2>Message Board</h2>
+
+
+{{if .Userinfo.LoggedIn}}
 {{range .Posts}}
 <div class="forum-post">
     <p>{{.Author}}</p>
@@ -95,5 +99,40 @@
         <button type="submit" name="post-id" value="{{.PostID}}">Comment</button>
     </form>
 </div>
+{{end}}
+{{end}}
+{{if not .Userinfo.LoggedIn}}
+{{range .Posts}}
+<div class="forum-post">
+    <h3>{{.Title}}</h3>
+    <p>{{.Content}}</p>
+    <p>{{.Category}}</p>
+    <p>{{.PostTimeStr}}</p>
+    <p>by {{.Author}}</p>
+    <form method="GET" action="login">
+ <button type="submit">Like</button></a>
+        <span>{{.Likes}}</span> 
+    </form>
+    <form method="GET" action="login">
+        <button type="submit">Dislike</button>
+        <span>{{.Dislikes}}</span>
+    </form>
+    {{range .Comments}}
+    <div class="forum-comment">
+        <p>{{.Author}}</p>
+        <p>{{.Content}}</p>
+        <p>{{.CommentTimeStr}}</p>
+        <form method="get" action="login">
+            <button type="submit" name="com-like" value="{{.PostID}}-{{.CommentID}}-{{.Likes}}">Like</button>
+            <span>{{.Likes}}</span>
+        </form>
+        <form method="get" action="login">
+            <button type="submit" name="com-dislike" value="{{.PostID}}-{{.CommentID}}-{{.Dislikes}}">Dislike</button>
+            <span>{{.Dislikes}}</span>
+        </form>
+    </div>
+    {{end}}
+</div>
+{{end}}
 {{end}}
 {{template "footer"}}
