@@ -13,7 +13,7 @@ type mainPageData struct {
 }
 
 func HomeHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method == "GET" {
+	if r.Method == http.MethodGet {
 		// gh++
 		// fmt.Println(gh)
 		tpl, err := template.ParseFiles("./templates/header.gohtml", "./templates/footer.gohtml", "./templates/index.gohtml")
@@ -22,7 +22,21 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 			log.Fatal(err)
 		}
 
-		pos := displayPostsAndComments()
+		filCat := r.FormValue("category-filter")
+		filAuthor := r.FormValue("author-filter")
+		filLiked := r.FormValue("liked-post")
+
+		var pos []post
+		if filCat != "" {
+			pos = filCatDisplayPostsAndComments(filCat)
+		} else if filAuthor != "" {
+			pos = filAuthorDisplayPostsAndComments(filAuthor)
+		} else if filLiked != "" {
+			pos = filLikedDisplayPostsAndComments()
+		} else {
+			pos = displayPostsAndComments()
+		}
+
 		allForumUnames := allForumUnames()
 
 		data := mainPageData{
@@ -36,7 +50,7 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "Executing Error", http.StatusInternalServerError)
 		}
 	}
-	if r.Method == "POST" {
+	if r.Method == http.MethodPost {
 		r.ParseForm()
 		// filterCategory := r.PostForm.Get("category-filter")
 		// fmt.Printf("Filter Category %s\n", filterCategory)
@@ -56,7 +70,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 		return
 	}
-	if r.Method == "GET" {
+	if r.Method == http.MethodGet {
 		tpl, err := template.ParseFiles("./templates/header.gohtml", "./templates/footer.gohtml", "./templates/login.gohtml")
 		if err != nil {
 			log.Fatal(err)
@@ -64,7 +78,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 
 		tpl.ExecuteTemplate(w, "login.gohtml", nil)
 	}
-	if r.Method == "POST" {
+	if r.Method == http.MethodPost {
 		processLogin(w, r)
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 	}
@@ -75,14 +89,14 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 		return
 	}
-	if r.Method == "GET" {
+	if r.Method == http.MethodGet {
 		tpl, err := template.ParseFiles("./templates/header.gohtml", "./templates/footer.gohtml", "./templates/register.gohtml")
 		if err != nil {
 			log.Fatal(err)
 		}
 		tpl.ExecuteTemplate(w, "register.gohtml", nil)
 	}
-	if r.Method == "POST" {
+	if r.Method == http.MethodPost {
 		regNewUser(w, r)
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 	}
@@ -97,14 +111,14 @@ func LogoutHanler(w http.ResponseWriter, r *http.Request) {
 
 // func DeleteHandler(w http.ResponseWriter, r *http.Request) {
 // 	// for testing purpose
-// 	if r.Method == "GET" {
+// 	if r.Method == http.MethodGet {
 // 		tpl, err := template.ParseFiles("./templates/delete.gohtml", "./templates/footer.gohtml", "./templates/header.gohtml")
 // 		if err != nil {
 // 			log.Fatal(err)
 // 		}
 // 		tpl.ExecuteTemplate(w, "delete.gohtml", nil)
 // 	}
-// 	if r.Method == "POST" {
+// 	if r.Method == http.MethodPost {
 // 		deleteUser(r)
 // 	}
 // }

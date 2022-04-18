@@ -29,7 +29,7 @@ func displayPostsAndComments() []post {
 	// if filtered
 	// fmt.Printf("forumUser username when display post: %s\n", forumUser.Username)
 	var pos []post
-	rows, err := db.Query("SELECT * FROM posts")
+	rows, err := db.Query("SELECT * FROM posts;")
 	if err != nil {
 		log.Fatal(err)
 	}
