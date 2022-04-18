@@ -16,7 +16,7 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
 		// gh++
 		// fmt.Println(gh)
-		tpl, err := template.ParseFiles("./templates/header.gohtml", "./templates/footer.gohtml", "./templates/index.gohtml")
+		tpl, err := template.ParseFiles("./templates/header.gohtml", "./templates/footer.gohtml", "./templates/index.gohtml", "./templates/header2.gohtml")
 		// tpl, err := template.ParseFiles("./templates/index.gohtml")
 		if err != nil {
 			log.Fatal(err)
@@ -24,7 +24,6 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 
 		pos := displayPostsAndComments()
 		allForumUnames := allForumUnames()
-
 		data := mainPageData{
 			Posts:       pos,
 			Userinfo:    forumUser,

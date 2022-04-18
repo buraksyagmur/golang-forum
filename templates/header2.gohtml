@@ -1,4 +1,4 @@
-{{define "header"}}
+{{define "header2"}}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,8 +11,14 @@
 <body>
  <div class="navbar">
   <a href="/">Main Page</a>
-  <a href="login">Login</a>
-  <a href="register">Register</a>
- </div> 
+  <div class="dropdown">
+    <button class="dropbtn">Account</button>
+    <div class="dropdown-content">
+      <a href="NEEDTOCREATE">Posts</a>
+      <a href="NEEDTOCREATE">Settings</a>
+      <a href="logout">LogOut</a>
+    </div>
+  </div>
+</div> 
 {{end}}    
 
