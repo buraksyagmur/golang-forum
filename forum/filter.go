@@ -1,7 +1,6 @@
 package forum
 
 import (
-	"fmt"
 	"log"
 )
 
@@ -54,7 +53,6 @@ func filAuthorDisplayPostsAndComments(filAuthor string) []post {
 		rows.Scan(&(po.PostID), &(po.Author), &(po.Title), &(po.Content), &(po.Category), &(po.PostTime), &(po.Likes), &(po.Dislikes))
 		po.PostTimeStr = po.PostTime.Format("Mon 02-01-2006 15:04:05")
 		// fmt.Printf("Display Post: %d, by %s, title: %s, content: %s, in %s, at %v, with %d likes, and %d dislikes\n", po.PostID, po.Author, po.Title, po.Content, po.Category, po.PostTimeStr, po.Likes, po.Dislikes)
-		fmt.Printf("Post Author is %s\n", po.Author)
 		po.Comments = displayComments(po.PostID)
 		pos = append(pos, po)
 	}

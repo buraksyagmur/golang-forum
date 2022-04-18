@@ -14,8 +14,7 @@ type mainPageData struct {
 
 func HomeHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodGet {
-		// gh++
-		// fmt.Println(gh)
+		w.Header().Set("Content-Yype", "text/html; charset=utf-8")
 		tpl, err := template.ParseFiles("./templates/header.gohtml", "./templates/footer.gohtml", "./templates/index.gohtml")
 		// tpl, err := template.ParseFiles("./templates/index.gohtml")
 		if err != nil {
@@ -51,14 +50,6 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	if r.Method == http.MethodPost {
-		r.ParseForm()
-		// filterCategory := r.PostForm.Get("category-filter")
-		// fmt.Printf("Filter Category %s\n", filterCategory)
-		// if filterCategory != "" {
-		// 	fmt.Printf("Filter Category %s\n", filterCategory)
-		// } else {
-
-		// }
 		processPost(r)
 		processComment(r)
 		http.Redirect(w, r, "/", http.StatusSeeOther)
@@ -71,6 +62,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if r.Method == http.MethodGet {
+		w.Header().Set("Content-Yype", "text/html; charset=utf-8")
 		tpl, err := template.ParseFiles("./templates/header.gohtml", "./templates/footer.gohtml", "./templates/login.gohtml")
 		if err != nil {
 			log.Fatal(err)
@@ -90,6 +82,7 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if r.Method == http.MethodGet {
+		w.Header().Set("Content-Yype", "text/html; charset=utf-8")
 		tpl, err := template.ParseFiles("./templates/header.gohtml", "./templates/footer.gohtml", "./templates/register.gohtml")
 		if err != nil {
 			log.Fatal(err)
