@@ -44,6 +44,7 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 			ForumUnames: allForumUnames,
 		}
 		// fmt.Println("---------", forumUser)
+		err = tpl.ExecuteTemplate(w, "header.gohtml", data)
 		err = tpl.ExecuteTemplate(w, "index.gohtml", data)
 		if err != nil {
 			http.Error(w, "Executing Error", http.StatusInternalServerError)
@@ -67,7 +68,6 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			log.Fatal(err)
 		}
-
 		tpl.ExecuteTemplate(w, "login.gohtml", nil)
 	}
 	if r.Method == http.MethodPost {
