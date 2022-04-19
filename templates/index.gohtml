@@ -1,4 +1,9 @@
+ {{if .Userinfo.LoggedIn}}
+{{template "header2"}}
+{{end}}
+{{if not .Userinfo.LoggedIn}}
 {{template "header"}}
+{{end}}
 <h1>Welcome to Our Forum!</h1>
  {{if .Userinfo.LoggedIn}}
 <form method="post" class="forum-form">

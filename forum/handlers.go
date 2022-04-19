@@ -37,7 +37,6 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		allForumUnames := allForumUnames()
-
 		data := mainPageData{
 			Posts:       pos,
 			Userinfo:    forumUser,
