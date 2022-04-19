@@ -15,8 +15,6 @@ type mainPageData struct {
 	ForumUnames []string
 }
 
-var Chosen []post
-
 func HomeHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodGet {
 		w.Header().Set("Content-Yype", "text/html; charset=utf-8")
@@ -120,6 +118,7 @@ func PostPageHandler(w http.ResponseWriter, r *http.Request) {
 		pos := displayPostsAndComments()
 
 		allForumUnames := allForumUnames()
+		var Chosen []post
 		for i := 0; i < len(pos); i++ {
 			if pos[i].PostID == PostIdFromHTML {
 				Chosen = append(Chosen, pos[i])
