@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strings"
 
 	uuid "github.com/satori/go.uuid"
 	"golang.org/x/crypto/bcrypt"
@@ -20,7 +21,22 @@ func regNewUser(w http.ResponseWriter, r *http.Request) {
 	email := r.PostForm.Get("email")
 	password := []byte(r.PostForm.Get("password"))
 
-	// check if exists
+	if strings.Trim(uname, " ") == "" {
+		http.Error(w, "Username cannot be empty", http.StatusForbidden)
+		http.Redirect(w, r, "/register", http.StatusSeeOther)
+		return
+	}
+
+	// check if already exists
+	rows, err := db.Query("SELECT username, email FROM users WHERE username = ? OR email = ?;", uname, email)
+	if err != nil {
+		log.Fatal(err)
+	}
+	if rows.Next() {
+		http.Error(w, "username or email is already taken", http.StatusConflict)
+		http.Redirect(w, r, "/register", http.StatusSeeOther)
+		return
+	}
 
 	hash, err := bcrypt.GenerateFromPassword(password, 10)
 	if err != nil {
@@ -41,7 +57,7 @@ func regNewUser(w http.ResponseWriter, r *http.Request) {
 	var a int
 	var l bool
 
-	rows, err := db.Query("SELECT * FROM users")
+	rows, err = db.Query("SELECT * FROM users")
 	if err != nil {
 		log.Fatal(err)
 	}

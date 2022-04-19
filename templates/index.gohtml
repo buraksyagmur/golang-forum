@@ -1,4 +1,4 @@
- {{if .Userinfo.LoggedIn}}
+{{if .Userinfo.LoggedIn}}
 {{template "header2"}}
 {{end}}
 {{if not .Userinfo.LoggedIn}}
@@ -42,7 +42,7 @@
 </form>
 {{end}}
 <h3>Filter by category</h3>
-<form method="post">
+<form method="get">
 <label for="category">Please choose a category:</label>
 <select name="category-filter" id="category">
     <option value="">-Please choose a category</option>
@@ -52,10 +52,11 @@
     <option value="mobile">Mobile Development</option>
     <option value="videogames">Videogames</option>
 </select>
-<button type="submit">Filter</button>
+<button type="submit">Filter Results</button>
 </form>
+{{if .Userinfo.LoggedIn}}
 <h3>Filter by author</h3>
-<form method="post">
+<form method="get">
     <label for="author">Please choose an author:</label>
     <select name="author-filter" id="author">
         <option value="">-Please choose an author</option>
@@ -63,6 +64,15 @@
         <option value="{{.}}">{{.}}</option>
     {{end}}
     </select>
+    <button type="submit">Filter Results</button>
+</form>
+<h3>All liked post</h3>
+<form method="get">
+    <button name="liked-post" value="liked-post">See All Liked Post</button>
+</form>
+{{end}}
+<form method="get">
+    <button type="submit">Remove filter</button>
 </form>
 <h2>Message Board</h2>
 {{if .Userinfo.LoggedIn}}
@@ -70,7 +80,7 @@
 <div class="forum-post">
     <p>{{.Author}}</p>
     <h3>{{.Title}}</h3>
-    <p>{{.Content}}</p>
+    <p style="white-space: pre-line">{{.Content}}</p>
     <p>{{.Category}}</p>
     <p>{{.PostTimeStr}}</p>
     <form method="post">
