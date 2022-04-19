@@ -47,7 +47,7 @@
     <option value="mobile">Mobile Development</option>
     <option value="videogames">Videogames</option>
 </select>
-<button type="submit">Filter</button>
+<button type="submit">Filter Results</button>
 </form>
 {{if .Userinfo.LoggedIn}}
 <h3>Filter by author</h3>
@@ -59,11 +59,11 @@
         <option value="{{.}}">{{.}}</option>
     {{end}}
     </select>
-    <button type="submit">Filter</button>
+    <button type="submit">Filter Results</button>
 </form>
 <h3>All liked post</h3>
 <form method="get">
-    <button name="liked-post" value="liked-post">Filter All Liked Post</button>
+    <button name="liked-post" value="liked-post">See All Liked Post</button>
 </form>
 {{end}}
 <form method="get">
