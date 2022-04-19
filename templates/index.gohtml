@@ -65,8 +65,6 @@
     </select>
 </form>
 <h2>Message Board</h2>
-
-
 {{if .Userinfo.LoggedIn}}
 {{range .Posts}}
 <div class="forum-post">
@@ -83,29 +81,15 @@
         <button type="submit" name="po-dislike" value="{{.PostID}}-{{.Dislikes}}">Dislike</button>
         <span>{{.Dislikes}}</span>
     </form>
-    {{range .Comments}}
-    <div class="forum-comment">
-        <p>{{.Author}}</p>
-        <p>{{.Content}}</p>
-        <p>{{.CommentTimeStr}}</p>
-        <form method="post">
-            <button type="submit" name="com-like" value="{{.PostID}}-{{.CommentID}}-{{.Likes}}">Like</button>
-            <span>{{.Likes}}</span>
-        </form>
-        <form method="post">
-            <button type="submit" name="com-dislike" value="{{.PostID}}-{{.CommentID}}-{{.Dislikes}}">Dislike</button>
-            <span>{{.Dislikes}}</span>
-        </form>
-    </div>
-    {{end}}
-    <form method="post">
-        <label for="comment">comment: </label>
-        <textarea type="text" id="comment" name="comment" rows="1" cols="30"></textarea>
-        <button type="submit" name="post-id" value="{{.PostID}}">Comment</button>
+    <form action="/postpage" method="GET" class="index-form">
+    <button input type="submit" name="Full Details" value={{.PostID}}></button>
     </form>
 </div>
 {{end}}
 {{end}}
+
+
+
 {{if not .Userinfo.LoggedIn}}
 {{range .Posts}}
 <div class="forum-post">
@@ -114,29 +98,18 @@
     <p>{{.Category}}</p>
     <p>{{.PostTimeStr}}</p>
     <p>by {{.Author}}</p>
-    <form method="GET" action="login">
+    <form action="/login" method="GET">
  <button type="submit">Like</button></a>
         <span>{{.Likes}}</span> 
     </form>
-    <form method="GET" action="login">
+    <form action="/login" method="GET">
         <button type="submit">Dislike</button>
         <span>{{.Dislikes}}</span>
     </form>
-    {{range .Comments}}
-    <div class="forum-comment">
-        <p>{{.Author}}</p>
-        <p>{{.Content}}</p>
-        <p>{{.CommentTimeStr}}</p>
-        <form method="get" action="login">
-            <button type="submit" name="com-like" value="{{.PostID}}-{{.CommentID}}-{{.Likes}}">Like</button>
-            <span>{{.Likes}}</span>
-        </form>
-        <form method="get" action="login">
-            <button type="submit" name="com-dislike" value="{{.PostID}}-{{.CommentID}}-{{.Dislikes}}">Dislike</button>
-            <span>{{.Dislikes}}</span>
-        </form>
+         <form action="/postpage" method="GET" class="index-form">
+    <button input type="submit" name="Full Details" value={{.PostID}}></button>
+    </form>
     </div>
-    {{end}}
 </div>
 {{end}}
 {{end}}

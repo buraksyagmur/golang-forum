@@ -1,9 +1,12 @@
 package forum
 
 import (
+	"fmt"
 	"html/template"
 	"log"
 	"net/http"
+	"os"
+	"strconv"
 )
 
 type mainPageData struct {
@@ -12,11 +15,13 @@ type mainPageData struct {
 	ForumUnames []string
 }
 
+var Chosen []post
+
 func HomeHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
 		// gh++
 		// fmt.Println(gh)
-		tpl, err := template.ParseFiles("./templates/header.gohtml", "./templates/footer.gohtml", "./templates/index.gohtml", "./templates/header2.gohtml")
+		tpl, err := template.ParseFiles("./templates/header.gohtml", "./templates/footer.gohtml", "./templates/index.gohtml", "./templates/header2.gohtml", "./templates/post.gohtml")
 		// tpl, err := template.ParseFiles("./templates/index.gohtml")
 		if err != nil {
 			log.Fatal(err)
@@ -51,10 +56,10 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
-	if loggedIn(r) {
-		http.Redirect(w, r, "/", http.StatusSeeOther)
-		return
-	}
+	// if loggedIn(r) {
+	// 	http.Redirect(w, r, "/", http.StatusSeeOther)
+	// 	return
+	// }
 	if r.Method == "GET" {
 		tpl, err := template.ParseFiles("./templates/header.gohtml", "./templates/footer.gohtml", "./templates/login.gohtml")
 		if err != nil {
@@ -92,6 +97,40 @@ func LogoutHanler(w http.ResponseWriter, r *http.Request) {
 		processLogout(w, r)
 	}
 	http.Redirect(w, r, "/", http.StatusSeeOther)
+}
+
+func PostPageHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method == "GET" {
+
+		tpl, err := template.ParseFiles("./templates/header.gohtml", "./templates/footer.gohtml", "./templates/header2.gohtml", "./templates/post.gohtml")
+		if err != nil {
+			log.Fatal(err)
+		}
+		strID := r.FormValue("Full Details")
+		PostIdFromHTML, err := strconv.Atoi(strID)
+		if err != nil {
+			os.Exit(0)
+		}
+		fmt.Println(PostIdFromHTML, "---------")
+		pos := displayPostsAndComments()
+
+		allForumUnames := allForumUnames()
+		for i := 0; i < len(pos); i++ {
+			if pos[i].PostID == PostIdFromHTML {
+				Chosen = append(Chosen, pos[i])
+			}
+		}
+		data := mainPageData{
+			Posts:       Chosen,
+			Userinfo:    forumUser,
+			ForumUnames: allForumUnames,
+		}
+
+		err = tpl.ExecuteTemplate(w, "post.gohtml", data)
+		if err != nil {
+			http.Error(w, "Executing Error", http.StatusInternalServerError)
+		}
+	}
 }
 
 // func DeleteHandler(w http.ResponseWriter, r *http.Request) {
