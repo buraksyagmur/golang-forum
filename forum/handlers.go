@@ -15,7 +15,7 @@ type mainPageData struct {
 func HomeHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodGet {
 		w.Header().Set("Content-Yype", "text/html; charset=utf-8")
-		tpl, err := template.ParseFiles("./templates/header.gohtml", "./templates/footer.gohtml", "./templates/index.gohtml")
+		tpl, err := template.ParseFiles("./templates/header.gohtml", "./templates/header2.gohtml", "./templates/footer.gohtml", "./templates/index.gohtml")
 		// tpl, err := template.ParseFiles("./templates/index.gohtml")
 		if err != nil {
 			log.Fatal(err)
@@ -43,7 +43,6 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 			ForumUnames: allForumUnames,
 		}
 		// fmt.Println("---------", forumUser)
-		err = tpl.ExecuteTemplate(w, "header.gohtml", data)
 		err = tpl.ExecuteTemplate(w, "index.gohtml", data)
 		if err != nil {
 			http.Error(w, "Executing Error", http.StatusInternalServerError)
