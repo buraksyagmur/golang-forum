@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strings"
 
 	uuid "github.com/satori/go.uuid"
 	"golang.org/x/crypto/bcrypt"
@@ -20,7 +21,13 @@ func regNewUser(w http.ResponseWriter, r *http.Request) {
 	email := r.PostForm.Get("email")
 	password := []byte(r.PostForm.Get("password"))
 
-	// check if exists
+	if strings.Trim(uname, " ") == "" {
+		http.Error(w, "Username cannot be empty", http.StatusForbidden)
+		http.Redirect(w, r, "/register", http.StatusSeeOther)
+		return
+	}
+
+	// check if already exists
 	rows, err := db.Query("SELECT username, email FROM users WHERE username = ? OR email = ?;", uname, email)
 	if err != nil {
 		log.Fatal(err)
