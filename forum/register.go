@@ -21,6 +21,15 @@ func regNewUser(w http.ResponseWriter, r *http.Request) {
 	password := []byte(r.PostForm.Get("password"))
 
 	// check if exists
+	rows, err := db.Query("SELECT username, email FROM users WHERE username = ? OR email = ?;", uname, email)
+	if err != nil {
+		log.Fatal(err)
+	}
+	if rows.Next() {
+		http.Error(w, "username or email is already taken", http.StatusConflict)
+		http.Redirect(w, r, "/register", http.StatusSeeOther)
+		return
+	}
 
 	hash, err := bcrypt.GenerateFromPassword(password, 10)
 	if err != nil {
@@ -41,7 +50,7 @@ func regNewUser(w http.ResponseWriter, r *http.Request) {
 	var a int
 	var l bool
 
-	rows, err := db.Query("SELECT * FROM users")
+	rows, err = db.Query("SELECT * FROM users")
 	if err != nil {
 		log.Fatal(err)
 	}

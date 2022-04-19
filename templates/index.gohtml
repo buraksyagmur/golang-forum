@@ -77,7 +77,7 @@
 <div class="forum-post">
     <p>{{.Author}}</p>
     <h3>{{.Title}}</h3>
-    <p>{{.Content}}</p>
+    <p style="white-space: pre-line">{{.Content}}</p>
     <p>{{.Category}}</p>
     <p>{{.PostTimeStr}}</p>
     <form method="post">
@@ -91,7 +91,7 @@
     {{range .Comments}}
     <div class="forum-comment">
         <p>{{.Author}}</p>
-        <p>{{.Content}}</p>
+        <p style="white-space: pre-line">{{.Content}}</p>
         <p>{{.CommentTimeStr}}</p>
         <form method="post">
             <button type="submit" name="com-like" value="{{.PostID}}-{{.CommentID}}-{{.Likes}}">Like</button>
