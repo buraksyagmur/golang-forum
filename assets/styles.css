@@ -4,7 +4,6 @@
 
 html {
     box-sizing: border-box;
-    font-family: Open Sans;
 }
 body {
     margin: 0;
@@ -28,10 +27,42 @@ h1 {
 .forum-post:nth-child(odd){
   background-color: rgba(249, 234, 242, 0.3);
 }
+ul.titleclass{
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+.postbutton {
+  text-align: center;
+  border: none;
+  padding: 0;
+  list-style-type: none;
+  margin: 0;
+  background: none;
+  font-size: 30px;
+  color:#8453CE;
+}
+.Like{ 
+  background-color: red;
+  font-size: 25px;
+  color:none;
+  margin-left: 25px ;
+}
 
+button{
+  background-color: #56C271;
+  border: none;
+  color: #FFFEFE;
+  padding: 8px 16px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 12px;
 
-
-
+}
+.postbutton:hover {
+  cursor: pointer;
+}
 .navbar {
     overflow: hidden;
     background-color: #56C271;

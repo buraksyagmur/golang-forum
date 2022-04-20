@@ -52,9 +52,9 @@
     <option value="mobile">Mobile Development</option>
     <option value="videogames">Videogames</option>
 </select>
-<button type="submit">Filter Results</button>
+<button class="basicButton" type="submit">Filter Results</button>
 </form>
-{{if .Userinfo.LoggedIn}}
+
 <h3>Filter by author</h3>
 <form method="get">
     <label for="author">Please choose an author:</label>
@@ -66,6 +66,7 @@
     </select>
     <button type="submit">Filter Results</button>
 </form>
+{{if .Userinfo.LoggedIn}}
 <h3>All liked post</h3>
 <form method="get">
     <button name="liked-post" value="liked-post">See All Liked Post</button>
@@ -84,15 +85,15 @@
     <p>{{.Category}}</p>
     <p>{{.PostTimeStr}}</p>
     <form method="post">
-        <button type="submit" name="po-like" value="{{.PostID}}-{{.Likes}}">Like</button>
+        <button type="submit" name="po-like" class="Like" value="{{.PostID}}-{{.Likes}}">Like</button>
         <span>{{.Likes}}</span> 
     </form>
     <form method="post">
-        <button type="submit" name="po-dislike" value="{{.PostID}}-{{.Dislikes}}">Dislike</button>
+        <button type="submit" name="po-dislike" class="Dlike" value="{{.PostID}}-{{.Dislikes}}">Dislike</button>
         <span>{{.Dislikes}}</span>
     </form>
-    <form action="/postpage" method="GET" class="index-form">
-    <button input type="submit" name="Full Details" value={{.PostID}}></button>
+    <form action="/postpage" method="GET">
+    <button input type="submit" name="po-details" value="{{.PostID}}">Post</button>
     </form>
 </div>
 {{end}}
@@ -103,23 +104,25 @@
 {{if not .Userinfo.LoggedIn}}
 {{range .Posts}}
 <div class="forum-post">
-    <h3>{{.Title}}</h3>
+    <form action="/postpage" method="GET">
+        <ul><input type="hidden" name="postdetails" class="titleclass" value={{.PostID}}>
+   <li> <input type="submit" class="postbutton" name="postdetails" value={{.Title}}></li>
+   </ul>
+    </form>
     <p>{{.Content}}</p>
     <p>{{.Category}}</p>
     <p>{{.PostTimeStr}}</p>
     <p>by {{.Author}}</p>
     <form action="/login" method="GET">
- <button type="submit">Like</button></a>
+ <button type="submit" class="Like">&#x2661</button></a>
         <span>{{.Likes}}</span> 
     </form>
     <form action="/login" method="GET">
-        <button type="submit">Dislike</button>
+        <button type="submit" class="Dlike">&#8681</button>
         <span>{{.Dislikes}}</span>
     </form>
-         <form action="/postpage" method="GET" class="index-form">
-    <button input type="submit" name="Full Details" value={{.PostID}}></button>
-    </form>
-    </div>
+   
+   
 </div>
 {{end}}
 {{end}}

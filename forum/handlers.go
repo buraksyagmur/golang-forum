@@ -109,7 +109,7 @@ func PostPageHandler(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			log.Fatal(err)
 		}
-		strID := r.FormValue("Full Details")
+		strID := r.FormValue("postdetails")
 		PostIdFromHTML, err := strconv.Atoi(strID)
 		if err != nil {
 			os.Exit(0)
