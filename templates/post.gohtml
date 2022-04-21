@@ -51,7 +51,7 @@
     <p>{{.Content}}</p>
     <p>{{.Category}}</p>
     <p>{{.PostTimeStr}}</p>
-    <form action="/login" method="post">
+    <form action="/login" method="get">
         <button type="submit" name="po-like" value="{{.PostID}}-{{.Likes}}">Like</button>
         <span>{{.Likes}}</span> 
     </form>

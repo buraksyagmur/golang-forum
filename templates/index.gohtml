@@ -5,6 +5,7 @@
 {{template "header"}}
 {{end}}
 <h1>Welcome to Our Forum!</h1>
+
  {{if .Userinfo.LoggedIn}}
 <form method="post" class="forum-form">
     <div>
@@ -41,6 +42,7 @@
     <button type="submit">Post</button>
 </form>
 {{end}}
+
 <h3>Filter by category</h3>
 <form method="get">
 <label for="category">Please choose a category:</label>
@@ -99,8 +101,6 @@
 {{end}}
 {{end}}
 
-
-
 {{if not .Userinfo.LoggedIn}}
 {{range .Posts}}
 <div class="forum-post">
@@ -121,8 +121,6 @@
         <button type="submit" class="Dlike">&#8681</button>
         <span>{{.Dislikes}}</span>
     </form>
-   
-   
 </div>
 {{end}}
 {{end}}
