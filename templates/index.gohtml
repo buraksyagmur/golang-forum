@@ -54,7 +54,7 @@
 </select>
 <button class="basicButton" type="submit">Filter Results</button>
 </form>
-
+{{if .Userinfo.LoggedIn}}
 <h3>Filter by author</h3>
 <form method="get">
     <label for="author">Please choose an author:</label>
@@ -66,7 +66,7 @@
     </select>
     <button type="submit">Filter Results</button>
 </form>
-{{if .Userinfo.LoggedIn}}
+
 <h3>All liked post</h3>
 <form method="get">
     <button name="liked-post" value="liked-post">See All Liked Post</button>

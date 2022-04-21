@@ -22,7 +22,7 @@ func allForumUnames() []string {
 func filCatDisplayPostsAndComments(filCat string) []post {
 	var pos []post
 	// fmt.Printf("filCat is %s\n", filCat)
-	filCat = "%" + filCat + "%"
+	filCat = "%(" + filCat + ")%"
 	rows, err := db.Query("SELECT * FROM posts WHERE category LIKE ?;", filCat)
 	if err != nil {
 		log.Fatal(err)

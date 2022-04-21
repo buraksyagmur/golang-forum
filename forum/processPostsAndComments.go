@@ -62,12 +62,7 @@ func processPost(r *http.Request) {
 
 		postCatStr := ""
 		for i := 0; i < len(postCat); i++ {
-			if i != len(postCat)-1 {
-				postCatStr += postCat[i] + "+"
-			}
-			if i == len(postCat)-1 {
-				postCatStr += postCat[i]
-			}
+			postCatStr += "(" + postCat[i] + ")"
 		}
 		stmt.Exec(forumUser.Username, postTitle, postCon, postCatStr, time.Now(), 0, 0)
 		// stmt.Exec("ST", postTitle, postCon, postCatStr, time.Now().Add(time.Minute*20), 3, 16)
