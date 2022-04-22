@@ -81,21 +81,22 @@
 {{if .Userinfo.LoggedIn}}
 {{range .Posts}}
 <div class="forum-post">
-    <p>{{.Author}}</p>
-    <h3>{{.Title}}</h3>
-    <p style="white-space: pre-line">{{.Content}}</p>
+    <form action="/postpage" method="GET">
+        <ul><input type="hidden" name="postdetails" class="titleclass" value={{.PostID}}>
+   <li> <input type="submit" class="postbutton" name="postdetails" value={{.Title}}></li>
+   </ul>
+    </form>
+    <p>{{.Content}}</p>
     <p>{{.Category}}</p>
     <p>{{.PostTimeStr}}</p>
-    <form method="post">
-        <button type="submit" name="po-like" class="Like" value="{{.PostID}}-{{.Likes}}">Like</button>
+    <p>by {{.Author}}</p>
+     <form method="post">
+        <button type="submit" name="po-like" class="Like" value="{{.PostID}}-{{.Likes}}">&#x2661</button>
         <span>{{.Likes}}</span> 
     </form>
     <form method="post">
-        <button type="submit" name="po-dislike" class="Dlike" value="{{.PostID}}-{{.Dislikes}}">Dislike</button>
+        <button type="submit" name="po-dislike" class="Dlike" value="{{.PostID}}-{{.Dislikes}}">&#8681</button>
         <span>{{.Dislikes}}</span>
-    </form>
-    <form action="/postpage" method="GET">
-    <button input type="submit" name="po-details" value="{{.PostID}}">Post</button>
     </form>
 </div>
 {{end}}

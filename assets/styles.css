@@ -43,7 +43,14 @@ ul.titleclass{
   color:#8453CE;
 }
 .Like{ 
-  background-color: red;
+  background-color: none;
+  font-size: 25px;
+  color:none;
+  margin-left: 25px ;
+}
+
+.Dlike{ 
+  background-color: none;
   font-size: 25px;
   color:none;
   margin-left: 25px ;
@@ -97,12 +104,12 @@ button{
     margin: 0; 
   }
   
-  /* Add a red background color to navbar links on hover */
+
   .navbar a:hover, .dropdown:hover .dropbtn {
     background-color: #8453CE;
   }
   
-  /* Dropdown content (hidden by default) */
+
   .dropdown-content {
     display: none;
     position: absolute;
@@ -112,7 +119,7 @@ button{
     z-index: 1;
   }
   
-  /* Links inside the dropdown */
+
   .dropdown-content a {
     float: none;
     color: black;
@@ -122,12 +129,12 @@ button{
     text-align: left;
   }
   
-  /* Add a grey background color to dropdown links on hover */
+
   .dropdown-content a:hover {
     background-color: #ddd;
   }
   
-  /* Show the dropdown menu on hover */
+
   .dropdown:hover .dropdown-content {
     display: block;
   }

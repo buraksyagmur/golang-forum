@@ -15,6 +15,8 @@ type mainPageData struct {
 	ForumUnames []string
 }
 
+var urlPost string
+
 func HomeHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodGet {
 		w.Header().Set("Content-Yype", "text/html; charset=utf-8")
@@ -96,9 +98,9 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func LogoutHanler(w http.ResponseWriter, r *http.Request) {
-	if loggedIn(r) {
-		processLogout(w, r)
-	}
+	//	if loggedIn(r) {
+	processLogout(w, r)
+	//	}
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
@@ -124,6 +126,8 @@ func PostPageHandler(w http.ResponseWriter, r *http.Request) {
 				Chosen = append(Chosen, pos[i])
 			}
 		}
+
+		urlPost = "postpage?postdetails=" + strID + "&postdetails=" + Chosen[0].Title
 		data := mainPageData{
 			Posts:       Chosen,
 			Userinfo:    forumUser,
@@ -134,6 +138,11 @@ func PostPageHandler(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			http.Error(w, "Executing Error", http.StatusInternalServerError)
 		}
+	} else if r.Method == "POST" {
+
+		processPost(r)
+		processComment(r)
+		http.Redirect(w, r, urlPost, http.StatusSeeOther)
 	}
 }
 

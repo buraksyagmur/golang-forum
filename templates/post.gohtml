@@ -13,11 +13,11 @@
     <p>{{.Category}}</p>
     <p>{{.PostTimeStr}}</p>
     <form method="post">
-        <button type="submit" name="po-like" value="{{.PostID}}-{{.Likes}}">Like</button>
+        <button type="submit" name="po-like" value="{{.PostID}}-{{.Likes}}">&#x2661</button>
         <span>{{.Likes}}</span> 
     </form>
     <form method="post">
-        <button type="submit" name="po-dislike" value="{{.PostID}}-{{.Dislikes}}">Dislike</button>
+        <button type="submit" name="po-dislike" value="{{.PostID}}-{{.Dislikes}}">&#8681</button>
         <span>{{.Dislikes}}</span>
     </form>
     {{range .Comments}}
@@ -26,11 +26,11 @@
         <p>{{.Content}}</p>
         <p>{{.CommentTimeStr}}</p>
         <form method="post">
-            <button type="submit" name="com-like" value="{{.PostID}}-{{.CommentID}}-{{.Likes}}">Like</button>
+            <button type="submit" name="com-like" value="{{.PostID}}-{{.CommentID}}-{{.Likes}}">&#x2661</button>
             <span>{{.Likes}}</span>
         </form>
         <form method="post">
-            <button type="submit" name="com-dislike" value="{{.PostID}}-{{.CommentID}}-{{.Dislikes}}">Dislike</button>
+            <button type="submit" name="com-dislike" value="{{.PostID}}-{{.CommentID}}-{{.Dislikes}}">&#8681</button>
             <span>{{.Dislikes}}</span>
         </form>
     </div>

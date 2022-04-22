@@ -86,13 +86,16 @@ func processLogin(w http.ResponseWriter, r *http.Request) {
 
 func processLogout(w http.ResponseWriter, r *http.Request) {
 	c, _ := r.Cookie("session")
-	fmt.Printf("cookie sid to be removed (have value): %s\n", c.Value)
 	stmt, err := db.Prepare("DELETE FROM sessions WHERE sessionID=?")
-	if err != nil {
-		log.Fatal(err)
+	if c != nil {
+		fmt.Printf("cookie sid to be removed (have value): %s\n", c.Value)
+
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer stmt.Close()
+		stmt.Exec(c.Value)
 	}
-	defer stmt.Close()
-	stmt.Exec(c.Value)
 
 	// test
 	var sessionID string
