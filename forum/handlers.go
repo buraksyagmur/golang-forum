@@ -19,7 +19,7 @@ var urlPost string
 
 func HomeHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodGet {
-		w.Header().Set("Content-Yype", "text/html; charset=utf-8")
+		w.Header().Set("Content-Type", "text/html; charset=utf-8")
 		tpl, err := template.ParseFiles("./templates/header.gohtml", "./templates/header2.gohtml", "./templates/footer.gohtml", "./templates/index.gohtml")
 		// tpl, err := template.ParseFiles("./templates/index.gohtml")
 		if err != nil {
@@ -61,6 +61,7 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("thats loggen in", loggedIn(r))
 	if loggedIn(r) {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 		return
@@ -84,7 +85,7 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if r.Method == http.MethodGet {
-		w.Header().Set("Content-Yype", "text/html; charset=utf-8")
+		w.Header().Set("Content-Type", "text/html; charset=utf-8")
 		tpl, err := template.ParseFiles("./templates/header.gohtml", "./templates/footer.gohtml", "./templates/register.gohtml")
 		if err != nil {
 			log.Fatal(err)
@@ -143,6 +144,32 @@ func PostPageHandler(w http.ResponseWriter, r *http.Request) {
 		processPost(r)
 		processComment(r)
 		http.Redirect(w, r, urlPost, http.StatusSeeOther)
+	}
+}
+
+func CategoryPageHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method == "GET" {
+		w.Header().Set("Content-Type", "text/html; charset=utf-8")
+		tpl, err := template.ParseFiles("./templates/header.gohtml", "./templates/header2.gohtml", "./templates/footer.gohtml", "./templates/categories.gohtml")
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		var pos []post
+		category := r.FormValue("categoryAllPosts")
+		pos = filCatDisplayPostsAndComments(category)
+
+		allForumUnames := allForumUnames()
+		data := mainPageData{
+			Posts:       pos,
+			Userinfo:    forumUser,
+			ForumUnames: allForumUnames,
+		}
+		// fmt.Println("---------", forumUser)
+		err = tpl.ExecuteTemplate(w, "categories.gohtml", data)
+		if err != nil {
+			http.Error(w, "Executing Error", http.StatusInternalServerError)
+		}
 	}
 }
 

@@ -37,7 +37,7 @@ func displayPostsAndComments() []post {
 	defer rows.Close()
 	for rows.Next() {
 		var po post
-		rows.Scan(&(po.PostID), &(po.Author), &(po.Title), &(po.Content), &(po.Category), &(po.PostTime), &(po.Likes), &(po.Dislikes))
+		rows.Scan(&(po.PostID), &(po.Author),&(po.Image), &(po.Title), &(po.Content), &(po.Category), &(po.PostTime), &(po.Likes), &(po.Dislikes))
 		po.Category = strings.Trim(po.Category, "(")
 		po.Category = strings.Trim(po.Category, ")")
 		po.PostTimeStr = po.PostTime.Format("Mon 02-01-2006 15:04:05")

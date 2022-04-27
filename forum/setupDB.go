@@ -10,7 +10,7 @@ import (
 var db *sql.DB
 
 func createUsersTable() {
-	stmt, err := db.Prepare("CREATE TABLE IF NOT EXISTS users (username VARCHAR(30) PRIMARY KEY, email VARCHAR(50), password VARCHAR(100), access INTEGER, loggedIn BOOLEAN);")
+	stmt, err := db.Prepare("CREATE TABLE IF NOT EXISTS users (username VARCHAR(30) PRIMARY KEY,image VARCHAR(2083), email VARCHAR(50), password VARCHAR(100), access INTEGER, loggedIn BOOLEAN);")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -28,7 +28,7 @@ func createSessionsTable() {
 }
 
 func createPostsTable() {
-	stmt, err := db.Prepare("CREATE TABLE IF NOT EXISTS posts (postID INTEGER PRIMARY KEY AUTOINCREMENT, author VARCHAR(30), title VARCHAR(50), content VARCHAR(1000), category VARCHAR(50), postTime DATETIME, likes INTEGER, dislikes INTEGER, FOREIGN KEY(author) REFERENCES users(username));")
+	stmt, err := db.Prepare("CREATE TABLE IF NOT EXISTS posts (postID INTEGER PRIMARY KEY AUTOINCREMENT, author VARCHAR(30),image VARCHAR(2083), title VARCHAR(50), content VARCHAR(1000), category VARCHAR(50), postTime DATETIME, likes INTEGER, dislikes INTEGER, FOREIGN KEY(author) REFERENCES users(username));")
 	if err != nil {
 		log.Fatal(err)
 	}

@@ -20,6 +20,7 @@ func regNewUser(w http.ResponseWriter, r *http.Request) {
 	uname := r.PostForm.Get("username")
 	email := r.PostForm.Get("email")
 	password := []byte(r.PostForm.Get("password"))
+	image := "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
 
 	if strings.Trim(uname, " ") == "" {
 		http.Error(w, "Username cannot be empty", http.StatusForbidden)
@@ -43,15 +44,16 @@ func regNewUser(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 
-	stmt, err := db.Prepare("INSERT INTO users (username, email, password, access, loggedIn) VALUES (?,?,?,?,?);")
+	stmt, err := db.Prepare("INSERT INTO users (username, image, email, password, access, loggedIn) VALUES (?,?,?,?,?,?);")
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer stmt.Close()
-	stmt.Exec(uname, email, hash, 1, true)
+	stmt.Exec(uname, image, email, hash, 1, true)
 
 	// test
 	var u string
+	var i string
 	var e string
 	var p []byte
 	var a int
@@ -63,13 +65,14 @@ func regNewUser(w http.ResponseWriter, r *http.Request) {
 	}
 	defer rows.Close()
 	for rows.Next() {
-		rows.Scan(&u, &e, &p, &a, &l)
+		rows.Scan(&u, &i, &e, &p, &a, &l)
 	}
-	fmt.Printf("uname: %s e: %s pw: %s, ac: %d, log: %t\n", u, e, p, a, l)
+	fmt.Printf("uname: %s i: %s e: %s pw: %s, ac: %d, log: %t\n", u, i, e, p, a, l)
 
 	forumUser.Username = uname
 	forumUser.LoggedIn = true
 	forumUser.Access = 1
+	forumUser.Image = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
 
 	sid := uuid.NewV4()
 	http.SetCookie(w, &http.Cookie{

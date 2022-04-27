@@ -54,7 +54,7 @@ func processPost(r *http.Request) {
 		postCat := r.PostForm["postCat"]
 		// fmt.Println(postCon)
 
-		stmt, err := db.Prepare("INSERT INTO posts (author, title, content, category, postTime, likes, dislikes) VALUES (?,?,?,?,?,?,?);")
+		stmt, err := db.Prepare("INSERT INTO posts (author,image, title, content, category, postTime, likes, dislikes) VALUES (?,?,?,?,?,?,?,?);")
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -64,7 +64,7 @@ func processPost(r *http.Request) {
 		for i := 0; i < len(postCat); i++ {
 			postCatStr += "(" + postCat[i] + ")"
 		}
-		stmt.Exec(forumUser.Username, postTitle, postCon, postCatStr, time.Now(), 0, 0)
+		stmt.Exec(forumUser.Username, forumUser.Image, postTitle, postCon, postCatStr, time.Now(), 0, 0)
 		// stmt.Exec("ST", postTitle, postCon, postCatStr, time.Now().Add(time.Minute*20), 3, 16)
 
 		// test

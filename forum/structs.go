@@ -16,6 +16,7 @@ type comment struct {
 type post struct {
 	PostID      int
 	Author      string // author
+	Image       string
 	Title       string
 	Content     string
 	Category    string
@@ -30,6 +31,7 @@ type user struct {
 	Username      string
 	Access        int // 0 means no access, not logged in
 	LoggedIn      bool
+	Image         string
 	Posts         []post
 	Comments      []comment
 	LikedPost     []post
