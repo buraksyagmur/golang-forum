@@ -20,7 +20,7 @@ func regNewUser(w http.ResponseWriter, r *http.Request) {
 	uname := r.PostForm.Get("username")
 	email := r.PostForm.Get("email")
 	password := []byte(r.PostForm.Get("password"))
-	image := "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+	image := r.PostForm.Get("ProfilePic")
 
 	if strings.Trim(uname, " ") == "" {
 		http.Error(w, "Username cannot be empty", http.StatusForbidden)
@@ -72,7 +72,7 @@ func regNewUser(w http.ResponseWriter, r *http.Request) {
 	forumUser.Username = uname
 	forumUser.LoggedIn = true
 	forumUser.Access = 1
-	forumUser.Image = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+	forumUser.Image = image
 
 	sid := uuid.NewV4()
 	http.SetCookie(w, &http.Cookie{
