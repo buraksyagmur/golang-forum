@@ -61,7 +61,7 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("thats loggen in", loggedIn(r))
+	fmt.Println("logged in", loggedIn(r))
 	if loggedIn(r) {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 		return
