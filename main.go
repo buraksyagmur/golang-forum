@@ -1,7 +1,9 @@
 package main
 
 import (
+	"fmt"
 	"forum/forum"
+	"log"
 	"net/http"
 	"os/exec"
 )
@@ -20,4 +22,9 @@ func main() {
 	http.HandleFunc("/logout", forum.LogoutHanler)
 	http.HandleFunc("/postpage", forum.PostPageHandler)
 	// http.HandleFunc("/delete", forum.DeleteHandler)
+	fmt.Println("Starting server at port 8080")
+	err := http.ListenAndServe(":8080", nil)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
