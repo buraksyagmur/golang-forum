@@ -8,7 +8,7 @@
 {{range .Posts}}
 <div class="forum-postPage">
     <h3>{{.Title}}</h3>
-    <p>{{.Content}}</p>
+    <p style="white-space: pre-line">{{.Content}}</p>
     <form action="/category" method="GET">
         <input type="submit" name="categoryAllPosts" class="categoryclass" value={{.Category}}>
 <div id="photo">
@@ -28,7 +28,7 @@
     {{range .Comments}}
     <div class="forum-comment">
        
-        <p>{{.Content}}</p>
+        <p style="white-space: pre-line">{{.Content}}</p>
        
             <div id="photo">
   <img  src={{.Image}} alt="">
@@ -58,7 +58,7 @@
 <div class="forum-postPage">
    
     <h3>{{.Title}}</h3>
-    <p>{{.Content}}</p>
+    <p style="white-space: pre-line">{{.Content}}</p>
        <form action="/category" method="GET">
         <input type="submit" name="categoryAllPosts" class="categoryclass" value={{.Category}}>
          <div id="photo">
@@ -79,7 +79,7 @@
     {{range .Comments}}
     <div class="forum-comment">
        
-        <p>{{.Content}}</p>
+        <p style="white-space: pre-line">{{.Content}}</p>
  
         <div id="photo">
   <img src={{.Image}} alt="">
