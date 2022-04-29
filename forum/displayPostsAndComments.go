@@ -2,7 +2,6 @@ package forum
 
 import (
 	"log"
-	"strings"
 )
 
 func displayComments(postID int) []comment {
@@ -30,16 +29,16 @@ func displayPostsAndComments() []post {
 	// if filtered
 	// fmt.Printf("forumUser username when display post: %s\n", forumUser.Username)
 	var pos []post
-	rows, err := db.Query("SELECT * FROM posts;")
+	rows, err := db.Query("SELECT * FROM posts GROUP BY postID;")
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer rows.Close()
 	for rows.Next() {
 		var po post
-		rows.Scan(&(po.PostID), &(po.Author),&(po.Image), &(po.Title), &(po.Content), &(po.Category), &(po.PostTime), &(po.Likes), &(po.Dislikes))
-		po.Category = strings.Trim(po.Category, "(")
-		po.Category = strings.Trim(po.Category, ")")
+		rows.Scan(&(po.PostID), &(po.Author), &(po.Image), &(po.Title), &(po.Content), &(po.Category), &(po.PostTime), &(po.Likes), &(po.Dislikes))
+		// po.Category = strings.Trim(po.Category, "(")
+		// po.Category = strings.Trim(po.Category, ")")
 		po.PostTimeStr = po.PostTime.Format("Mon 02-01-2006 15:04:05")
 		// fmt.Printf("Display Post: %d, by %s, title: %s, content: %s, in %s, at %v, with %d likes, and %d dislikes\n", po.PostID, po.Author, po.Title, po.Content, po.Category, po.PostTimeStr, po.Likes, po.Dislikes)
 

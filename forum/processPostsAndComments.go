@@ -52,19 +52,45 @@ func processPost(r *http.Request) {
 		fmt.Printf("forumUser username when inserting new post: %s\n", forumUser.Username)
 		postCon := r.PostForm.Get("postContent")
 		postCat := r.PostForm["postCat"]
-		// fmt.Println(postCon)
+		fmt.Println(postCat)
 
-		stmt, err := db.Prepare("INSERT INTO posts (author,image, title, content, category, postTime, likes, dislikes) VALUES (?,?,?,?,?,?,?,?);")
+		// Insert the first cat
+		stmt, err := db.Prepare("INSERT INTO posts (author, image, title, content, category, postTime, likes, dislikes) VALUES (?,?,?,?,?,?,?,?);")
 		if err != nil {
 			log.Fatal(err)
 		}
 		defer stmt.Close()
+		stmt.Exec(forumUser.Username, forumUser.Image, postTitle, postCon, postCat[0], time.Now(), 0, 0)
 
-		postCatStr := ""
-		for i := 0; i < len(postCat); i++ {
-			postCatStr += "(" + postCat[i] + ")"
+		// Insert other cats if any, with the prev postID
+		if len(postCat) > 1 {
+			var curPostId int
+			rows, err := db.Query("SELECT MAX(postID) from posts ")
+			if err != nil {
+				log.Fatal(err)
+			}
+			defer rows.Close()
+
+			for rows.Next() {
+				rows.Scan(&curPostId)
+			}
+
+			for cat := 1; cat < len(postCat); cat++ {
+				stmt, err = db.Prepare("INSERT INTO posts (postID, author, image, title, content, category, postTime, likes, dislikes) VALUES(?,?,?,?,?,?,?,?,?);")
+				if err != nil {
+					log.Fatal(err)
+				}
+				stmt.Close()
+				stmt.Exec(curPostId, forumUser.Username, forumUser.Image, postTitle, postCon, postCat[cat], time.Now(), 0, 0)
+			}
+
 		}
-		stmt.Exec(forumUser.Username, forumUser.Image, postTitle, postCon, postCatStr, time.Now(), 0, 0)
+
+		// postCatStr := ""
+		// for i := 0; i < len(postCat); i++ {
+		// 	postCatStr += "(" + postCat[i] + ")"
+		// }
+		// stmt.Exec(forumUser.Username, forumUser.Image, postTitle, postCon, postCatStr, time.Now(), 0, 0)
 		// stmt.Exec("ST", postTitle, postCon, postCatStr, time.Now().Add(time.Minute*20), 3, 16)
 
 		// test
