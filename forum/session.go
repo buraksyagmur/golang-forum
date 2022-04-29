@@ -3,6 +3,7 @@ package forum
 import (
 	"fmt"
 	"log"
+	"net"
 	"net/http"
 
 	uuid "github.com/satori/go.uuid"
@@ -128,4 +129,16 @@ func processLogout(w http.ResponseWriter, r *http.Request) {
 	forumUser = user{}
 	fmt.Printf("forumUser username should be empty: %s\n", forumUser.Username)
 	fmt.Printf("forumUser Access should be 0 (nil value): %d\n", forumUser.Access)
+}
+
+func GetOutboundIP() net.IP {
+	conn, err := net.Dial("udp", "8.8.8.8:80")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer conn.Close()
+
+	localAddr := conn.LocalAddr().(*net.UDPAddr)
+
+	return localAddr.IP
 }

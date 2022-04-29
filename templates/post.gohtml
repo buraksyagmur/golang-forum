@@ -7,8 +7,8 @@
  {{if .Userinfo.LoggedIn}}
 {{range .Posts}}
 <div class="forum-postPage">
-    <h3>{{.Title}}</h3>
-    <p>{{.Content}}</p>
+    <p class="titleofPost">{{.Title}}</p>
+    <p class="contentofPost">{{.Content}}</p>
     <form action="/category" method="GET">
         <input type="submit" name="categoryAllPosts" class="categoryclass" value={{.Category}}>
 <div id="photo">
@@ -57,8 +57,8 @@
 {{range .Posts}}
 <div class="forum-postPage">
    
-    <h3>{{.Title}}</h3>
-    <p>{{.Content}}</p>
+    <p class="titleofPost">{{.Title}}</p>
+    <p class="contentofPost">{{.Content}}</p>
        <form action="/category" method="GET">
         <input type="submit" name="categoryAllPosts" class="categoryclass" value={{.Category}}>
          <div id="photo">
@@ -66,7 +66,7 @@
   <span >{{.Author}}</span>
 </div>
        <p class= "timeOfpost">{{.PostTimeStr}}</p>
-       div
+     <p class="viewed">Viewed:{{.Viewed}}</p>
     <form action="/login" method="get">
         <button type="submit" name="po-like" value="{{.PostID}}-{{.Likes}}">Like</button>
         <span>{{.Likes}}</span> 
