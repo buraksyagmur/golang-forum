@@ -66,6 +66,7 @@ func processLogin(w http.ResponseWriter, r *http.Request) {
 	}
 	fmt.Printf("%s (name from DB) Login successfully\n", unameDB)
 
+	// assign a cookie
 	sid := uuid.NewV4()
 	fmt.Printf("login sid: %s\n", sid)
 	http.SetCookie(w, &http.Cookie{
@@ -79,6 +80,7 @@ func processLogin(w http.ResponseWriter, r *http.Request) {
 	// forumUser.LoggedIn = true
 	// fmt.Printf("%s forum User Login\n", forumUser.Username)
 
+	// update the user's login status
 	stmt, err := db.Prepare("UPDATE users SET loggedIn = ? WHERE username = ?;")
 	if err != nil {
 		log.Fatal(err)
@@ -86,18 +88,26 @@ func processLogin(w http.ResponseWriter, r *http.Request) {
 	defer stmt.Close()
 	stmt.Exec(true, unameDB)
 
-	//test
-	var whichUser string
-	var logInOrNot bool
-	rows, err = db.Query("SELECT username, loggedIn FROM users WHERE username = ?;", unameDB)
+	// insert a record into session table
+	stmt, err = db.Prepare("INSERT INTO sessions (sessionID, username) VALUES (?, ?);")
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer rows.Close()
-	for rows.Next() {
-		rows.Scan(&whichUser, &logInOrNot)
-	}
-	fmt.Printf("login user: %s, login status: %v\n", whichUser, logInOrNot)
+	defer stmt.Close()
+	stmt.Exec(sid.String(), unameDB)
+
+	//test
+	// var whichUser string
+	// var logInOrNot bool
+	// rows, err = db.Query("SELECT username, loggedIn FROM users WHERE username = ?;", unameDB)
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+	// defer rows.Close()
+	// for rows.Next() {
+	// 	rows.Scan(&whichUser, &logInOrNot)
+	// }
+	// fmt.Printf("login user: %s, login status: %v\n", whichUser, logInOrNot)
 }
 
 func processLogout(w http.ResponseWriter, r *http.Request) {
@@ -168,8 +178,9 @@ func checkCookie(r *http.Request) user {
 		defer rows.Close()
 		for rows.Next() {
 			rows.Scan(&curUname)
-			fmt.Printf("Found uname %s in sessions\n", curUname)
+			// fmt.Printf("Found uname %s in sessions\n", curUname)
 		}
+		fmt.Printf("Found uname %s in sessions\n", curUname)
 		rows, err = db.Query("SELECT username, image, email, access, loggedIN  FROM users WHERE username = ?;", curUname)
 		if err != nil {
 			log.Fatal(err)
