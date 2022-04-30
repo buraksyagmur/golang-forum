@@ -15,7 +15,10 @@ type mainPageData struct {
 	ForumUnames []string
 }
 
-var urlPost string
+var (
+	urlPost     string
+	duplicateIP bool = false
+)
 
 func HomeHandler(w http.ResponseWriter, r *http.Request) {
 	curUser := checkCookie(r)
@@ -143,6 +146,17 @@ func PostPageHandler(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 
+		for i := 0; i < len(Chosen[0].IPs); i++ {
+			if Chosen[0].IPs[i].String() == GetOutboundIP().String() {
+				duplicateIP = true
+			}
+		}
+		if !duplicateIP {
+			Chosen[0].IPs = append(Chosen[0].IPs, GetOutboundIP())
+			Chosen[0].Viewed++
+		}
+		fmt.Println(GetOutboundIP())
+		fmt.Println(Chosen[0].Viewed)
 		urlPost = "postpage?postdetails=" + strID + "&postdetails=" + Chosen[0].Title
 		data := mainPageData{
 			Posts:       Chosen,

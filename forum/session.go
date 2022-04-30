@@ -3,6 +3,7 @@ package forum
 import (
 	"fmt"
 	"log"
+	"net"
 	"net/http"
 
 	uuid "github.com/satori/go.uuid"
@@ -206,4 +207,16 @@ func checkCookie(r *http.Request) user {
 	fmt.Printf("checkCookie:: login user: %s, login status: %v\n", whichUser, logInOrNot)
 
 	return curUser
+}
+
+func GetOutboundIP() net.IP {
+	conn, err := net.Dial("udp", "8.8.8.8:80")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer conn.Close()
+
+	localAddr := conn.LocalAddr().(*net.UDPAddr)
+
+	return localAddr.IP
 }
