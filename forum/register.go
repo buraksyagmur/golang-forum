@@ -10,7 +10,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-var forumUser user
+// var forumUser user
 
 func regNewUser(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()
@@ -69,10 +69,10 @@ func regNewUser(w http.ResponseWriter, r *http.Request) {
 	}
 	fmt.Printf("uname: %s i: %s e: %s pw: %s, ac: %d, log: %t\n", u, i, e, p, a, l)
 
-	forumUser.Username = uname
-	forumUser.LoggedIn = true
-	forumUser.Access = 1
-	forumUser.Image = image
+	// forumUser.Username = uname
+	// forumUser.LoggedIn = true
+	// forumUser.Access = 1
+	// forumUser.Image = image
 
 	sid := uuid.NewV4()
 	http.SetCookie(w, &http.Cookie{
@@ -81,7 +81,7 @@ func regNewUser(w http.ResponseWriter, r *http.Request) {
 		MaxAge: 1800,
 	})
 	fmt.Printf("reg sid: %s\n", sid)
-	fmt.Printf("Reg and login as %s\n", forumUser.Username)
+	fmt.Printf("Reg and login as %s\n", uname)
 
 	stmt, err = db.Prepare("INSERT INTO sessions (sessionID, username) VALUES (?,?);")
 	if err != nil {

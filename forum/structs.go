@@ -29,6 +29,7 @@ type post struct {
 
 type user struct {
 	Username      string
+	Email         string
 	Access        int // 0 means no access, not logged in
 	LoggedIn      bool
 	Image         string

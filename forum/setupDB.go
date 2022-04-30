@@ -10,7 +10,7 @@ import (
 var db *sql.DB
 
 func createUsersTable() {
-	stmt, err := db.Prepare("CREATE TABLE IF NOT EXISTS users (username VARCHAR(30) PRIMARY KEY,image VARCHAR(2083), email VARCHAR(50), password VARCHAR(100), access INTEGER, loggedIn BOOLEAN);")
+	stmt, err := db.Prepare("CREATE TABLE IF NOT EXISTS users (username VARCHAR(30) PRIMARY KEY, image VARCHAR(2083), email VARCHAR(50), password VARCHAR(100), access INTEGER, loggedIn BOOLEAN);")
 	if err != nil {
 		log.Fatal(err)
 	}

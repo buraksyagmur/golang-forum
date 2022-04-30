@@ -28,6 +28,7 @@ func loggedIn(r *http.Request) bool {
 }
 
 func processLogin(w http.ResponseWriter, r *http.Request) {
+	// get login data from form
 	err := r.ParseForm()
 	if err != nil {
 		log.Fatal(err)
@@ -36,6 +37,7 @@ func processLogin(w http.ResponseWriter, r *http.Request) {
 	pw := r.PostForm.Get("password")
 	fmt.Printf("login u: %s: , login pw: %s\n", uname, pw)
 
+	// get user data from db
 	var unameDB string
 	var hashDB []byte
 
@@ -51,8 +53,9 @@ func processLogin(w http.ResponseWriter, r *http.Request) {
 
 	// test hash
 	hash, err := bcrypt.GenerateFromPassword([]byte(pw), 10)
-
 	fmt.Printf("unameDB: %s , hashDB: %s\n", unameDB, hashDB)
+
+	// compare pw
 	err = bcrypt.CompareHashAndPassword(hashDB, []byte(pw))
 	// fmt.Printf("DB pw: %s, entered: %s\n", hashDB, pw)
 	fmt.Printf("DB pw: %s, entered: %s\n", hashDB, hash)
@@ -71,30 +74,56 @@ func processLogin(w http.ResponseWriter, r *http.Request) {
 		MaxAge: 1800,
 	})
 
-	forumUser.Username = unameDB
-	forumUser.Access = 1
-	forumUser.LoggedIn = true
-	fmt.Printf("%s forum User Login\n", forumUser.Username)
+	// forumUser.Username = unameDB
+	// forumUser.Access = 1
+	// forumUser.LoggedIn = true
+	// fmt.Printf("%s forum User Login\n", forumUser.Username)
 
 	stmt, err := db.Prepare("UPDATE users SET loggedIn = ? WHERE username = ?;")
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer stmt.Close()
-	stmt.Exec(true, forumUser.Username)
+	stmt.Exec(true, unameDB)
+
+	//test
+	var whichUser string
+	var logInOrNot bool
+	rows, err = db.Query("SELECT username, loggedIn FROM users WHERE username = ?;", unameDB)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer rows.Close()
+	for rows.Next() {
+		rows.Scan(&whichUser, &logInOrNot)
+	}
+	fmt.Printf("login user: %s, login status: %v\n", whichUser, logInOrNot)
 }
 
 func processLogout(w http.ResponseWriter, r *http.Request) {
-	c, _ := r.Cookie("session")
-	stmt, err := db.Prepare("DELETE FROM sessions WHERE sessionID=?")
-	if c != nil {
-		fmt.Printf("cookie sid to be removed (have value): %s\n", c.Value)
+	c, err := r.Cookie("session")
+	var logoutUname string
 
+	if err == nil {
+		// get the username of the logout user
+		rows, err := db.Query("SELECT username FROM sessions WHERE sessionID = ?;", c.Value)
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer rows.Close()
+		for rows.Next() {
+			rows.Scan(&logoutUname)
+		}
+		fmt.Printf("Found user %s wants to logout", logoutUname)
+
+		// delete sessionID from sessions db table
+		stmt, err := db.Prepare("DELETE FROM sessions WHERE sessionID=?")
 		if err != nil {
 			log.Fatal(err)
 		}
 		defer stmt.Close()
 		stmt.Exec(c.Value)
+		fmt.Printf("cookie sid removed (have value): %s\n", c.Value)
 	}
 
 	// test
@@ -105,6 +134,7 @@ func processLogout(w http.ResponseWriter, r *http.Request) {
 	}
 	fmt.Printf("cookie sid removed (should be empty): %s\n", sessionID) // empty is correct
 
+	// delete browser's cookie
 	_, err = r.Cookie("session")
 	if err == nil {
 		http.SetCookie(w, &http.Cookie{
@@ -113,19 +143,56 @@ func processLogout(w http.ResponseWriter, r *http.Request) {
 			MaxAge: -1,
 		})
 	}
-	fmt.Printf("%s Logout\n", forumUser.Username)
+	fmt.Printf("%s Logout\n", logoutUname)
 
-	stmt, err = db.Prepare("UPDATE users SET loggedIn = ? WHERE username = ?;")
+	stmt, err := db.Prepare("UPDATE users SET loggedIn = ? WHERE username = ?;")
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer stmt.Close()
-	stmt.Exec(false, forumUser.Username)
-	// test
-	fmt.Printf("forumUser username: %s\n", forumUser.Username)
-	fmt.Printf("Access should be 1: %d\n", forumUser.Access)
+	stmt.Exec(false, logoutUname)
+}
 
-	forumUser = user{}
-	fmt.Printf("forumUser username should be empty: %s\n", forumUser.Username)
-	fmt.Printf("forumUser Access should be 0 (nil value): %d\n", forumUser.Access)
+func checkCookie(r *http.Request) user {
+	var curUser user
+	c, err := r.Cookie("session")
+	// if there is a session cookie
+	if err == nil {
+		fmt.Printf("There is a cookie, sid: %s\n", c.Value)
+		// get current username from session table
+		var curUname string
+		rows, err := db.Query("SELECT username FROM sessions WHERE sessionID = ?;", c.Value)
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer rows.Close()
+		for rows.Next() {
+			rows.Scan(&curUname)
+			fmt.Printf("Found uname %s in sessions\n", curUname)
+		}
+		rows, err = db.Query("SELECT username, image, email, access, loggedIN  FROM users WHERE username = ?;", curUname)
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer rows.Close()
+		for rows.Next() {
+			rows.Scan(&curUser.Username, &curUser.Image, &curUser.Email, &curUser.Access, &curUser.LoggedIn)
+			fmt.Printf("Found user %s in users, with login status %v\n", curUser.Username, curUser.LoggedIn)
+		}
+	}
+
+	// test
+	var whichUser string
+	var logInOrNot bool
+	rows, err := db.Query("SELECT username, loggedIn FROM users WHERE username = ?;", curUser.Username)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer rows.Close()
+	for rows.Next() {
+		rows.Scan(&whichUser, &logInOrNot)
+	}
+	fmt.Printf("checkCookie:: login user: %s, login status: %v\n", whichUser, logInOrNot)
+
+	return curUser
 }

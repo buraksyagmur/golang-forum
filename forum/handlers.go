@@ -18,6 +18,21 @@ type mainPageData struct {
 var urlPost string
 
 func HomeHandler(w http.ResponseWriter, r *http.Request) {
+	curUser := checkCookie(r)
+
+	// // test
+	// var whichUser string
+	// var logInOrNot bool
+	// rows, err := db.Query("SELECT username, loggedIn FROM users WHERE username = ?;", curUser.Username)
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+	// defer rows.Close()
+	// for rows.Next() {
+	// 	rows.Scan(&whichUser, &logInOrNot)
+	// }
+	// fmt.Printf("HomeHandler:: login user: %s, login status: %v\n", whichUser, logInOrNot)
+
 	if r.Method == http.MethodGet {
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
 		tpl, err := template.ParseFiles("./templates/header.gohtml", "./templates/header2.gohtml", "./templates/footer.gohtml", "./templates/index.gohtml")
@@ -44,7 +59,7 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 		allForumUnames := allForumUnames()
 		data := mainPageData{
 			Posts:       pos,
-			Userinfo:    forumUser,
+			Userinfo:    curUser,
 			ForumUnames: allForumUnames,
 		}
 		// fmt.Println("---------", forumUser)
@@ -54,8 +69,8 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	if r.Method == http.MethodPost {
-		processPost(r)
-		processComment(r)
+		processPost(r, curUser)
+		processComment(r, curUser)
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 	}
 }
@@ -106,8 +121,8 @@ func LogoutHanler(w http.ResponseWriter, r *http.Request) {
 }
 
 func PostPageHandler(w http.ResponseWriter, r *http.Request) {
+	curUser := checkCookie(r)
 	if r.Method == "GET" {
-
 		tpl, err := template.ParseFiles("./templates/header.gohtml", "./templates/footer.gohtml", "./templates/header2.gohtml", "./templates/post.gohtml")
 		if err != nil {
 			log.Fatal(err)
@@ -117,7 +132,7 @@ func PostPageHandler(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			os.Exit(0)
 		}
-		fmt.Println(PostIdFromHTML, "---------")
+		// fmt.Println(PostIdFromHTML, "---------")
 		pos := displayPostsAndComments()
 
 		allForumUnames := allForumUnames()
@@ -131,7 +146,7 @@ func PostPageHandler(w http.ResponseWriter, r *http.Request) {
 		urlPost = "postpage?postdetails=" + strID + "&postdetails=" + Chosen[0].Title
 		data := mainPageData{
 			Posts:       Chosen,
-			Userinfo:    forumUser,
+			Userinfo:    curUser,
 			ForumUnames: allForumUnames,
 		}
 
@@ -141,13 +156,14 @@ func PostPageHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	} else if r.Method == "POST" {
 
-		processPost(r)
-		processComment(r)
+		processPost(r, curUser)
+		processComment(r, curUser)
 		http.Redirect(w, r, urlPost, http.StatusSeeOther)
 	}
 }
 
 func CategoryPageHandler(w http.ResponseWriter, r *http.Request) {
+	curUser := checkCookie(r)
 	if r.Method == "GET" {
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
 		tpl, err := template.ParseFiles("./templates/header.gohtml", "./templates/header2.gohtml", "./templates/footer.gohtml", "./templates/categories.gohtml")
@@ -162,7 +178,7 @@ func CategoryPageHandler(w http.ResponseWriter, r *http.Request) {
 		allForumUnames := allForumUnames()
 		data := mainPageData{
 			Posts:       pos,
-			Userinfo:    forumUser,
+			Userinfo:    curUser,
 			ForumUnames: allForumUnames,
 		}
 		// fmt.Println("---------", forumUser)

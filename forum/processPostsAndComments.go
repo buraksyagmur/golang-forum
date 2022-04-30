@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-func processPost(r *http.Request) {
+func processPost(r *http.Request, curUser user) {
 	err := r.ParseForm()
 	if err != nil {
 		log.Fatal(err)
@@ -19,7 +19,7 @@ func processPost(r *http.Request) {
 	postTitle := r.PostForm.Get("postTitle")
 
 	if idNumOfLikesStr != "" {
-		fmt.Printf("forumUser username when liking post: %s\n", forumUser.Username)
+		fmt.Printf("current User username when liking post: %s\n", curUser.Username)
 		idNumOfLikesStrSlice := strings.Split(idNumOfLikesStr, "-")
 		updatePostID := idNumOfLikesStrSlice[0]
 		numOfLikes, err := strconv.Atoi(idNumOfLikesStrSlice[1])
@@ -34,7 +34,7 @@ func processPost(r *http.Request) {
 		defer stmt.Close()
 		stmt.Exec(numOfLikes, updatePostID)
 	} else if idNumOfDislikesStr != "" {
-		fmt.Printf("forumUser username when disliking post: %s\n", forumUser.Username)
+		fmt.Printf("current User username when disliking post: %s\n", curUser.Username)
 		idNumOfDislikesStrSlice := strings.Split(idNumOfDislikesStr, "-")
 		updatePostID := idNumOfDislikesStrSlice[0]
 		numOfDislikes, err := strconv.Atoi(idNumOfDislikesStrSlice[1])
@@ -49,7 +49,7 @@ func processPost(r *http.Request) {
 		defer stmt.Close()
 		stmt.Exec(numOfDislikes, updatePostID)
 	} else if postTitle != "" {
-		fmt.Printf("forumUser username when inserting new post: %s\n", forumUser.Username)
+		fmt.Printf("curUser username when inserting new post: %s\n", curUser.Username)
 		postCon := r.PostForm.Get("postContent")
 		postCat := r.PostForm["postCat"]
 		fmt.Println(postCat)
@@ -60,7 +60,7 @@ func processPost(r *http.Request) {
 			log.Fatal(err)
 		}
 		defer stmt.Close()
-		stmt.Exec(forumUser.Username, forumUser.Image, postTitle, postCon, postCat[0], time.Now(), 0, 0)
+		stmt.Exec(curUser.Username, curUser.Image, postTitle, postCon, postCat[0], time.Now(), 0, 0)
 
 		// Insert other cats if any, with the prev postID
 		if len(postCat) > 1 {
@@ -81,7 +81,7 @@ func processPost(r *http.Request) {
 					log.Fatal(err)
 				}
 				stmt.Close()
-				stmt.Exec(curPostId, forumUser.Username, forumUser.Image, postTitle, postCon, postCat[cat], time.Now(), 0, 0)
+				stmt.Exec(curPostId, curUser.Username, curUser.Image, postTitle, postCon, postCat[cat], time.Now(), 0, 0)
 			}
 
 		}
@@ -117,7 +117,7 @@ func processPost(r *http.Request) {
 	return
 }
 
-func processComment(r *http.Request) {
+func processComment(r *http.Request, curUser user) {
 	err := r.ParseForm()
 	if err != nil {
 		log.Fatal(err)
@@ -126,7 +126,7 @@ func processComment(r *http.Request) {
 	idNumOfDislikesStr := r.PostForm.Get("com-dislike")
 	comCon := r.PostForm.Get("comment")
 	if idNumOfLikesStr != "" {
-		fmt.Printf("forumUser username when liking comment: %s\n", forumUser.Username)
+		fmt.Printf("curUser username when liking comment: %s\n", curUser.Username)
 		idNumOfLikesStrSlice := strings.Split(idNumOfLikesStr, "-")
 		poID := idNumOfLikesStrSlice[0]
 		comID := idNumOfLikesStrSlice[1]
@@ -143,7 +143,7 @@ func processComment(r *http.Request) {
 		stmt.Exec(NumOfLikes, poID, comID)
 
 	} else if idNumOfDislikesStr != "" {
-		fmt.Printf("forumUser username when disliking comment: %s\n", forumUser.Username)
+		fmt.Printf("curUser username when disliking comment: %s\n", curUser.Username)
 		idNumOfDislikesStrSlice := strings.Split(idNumOfDislikesStr, "-")
 		poID := idNumOfDislikesStrSlice[0]
 		comID := idNumOfDislikesStrSlice[1]
@@ -159,7 +159,7 @@ func processComment(r *http.Request) {
 		defer stmt.Close()
 		stmt.Exec(NumOfDislikes, poID, comID)
 	} else if comCon != "" {
-		fmt.Printf("forumUser username when inserting new comment: %s\n", forumUser.Username)
+		fmt.Printf("forumUser username when inserting new comment: %s\n", curUser.Username)
 		poId := r.PostForm.Get("post-id")
 		fmt.Printf("comment: %s under %s\n", comCon, poId)
 		stmt, err := db.Prepare("INSERT INTO comments (author, postID, content, commentTime, likes, dislikes) VALUES (?,?,?,?,?,?);")
@@ -167,7 +167,7 @@ func processComment(r *http.Request) {
 			log.Fatal(err)
 		}
 		defer stmt.Close()
-		stmt.Exec(forumUser.Username, poId, comCon, time.Now(), 0, 0)
+		stmt.Exec(curUser.Username, poId, comCon, time.Now(), 0, 0)
 	}
 	return
 }
