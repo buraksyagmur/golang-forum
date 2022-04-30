@@ -71,30 +71,21 @@ func processLogin(w http.ResponseWriter, r *http.Request) {
 		MaxAge: 1800,
 	})
 
-	var newForumUser user
-
-	newForumUser.Username = unameDB
-	newForumUser.LoggedIn = true
-	newForumUser.Access = 1
-	// newForumUser.Image = image
-
-	curForumUsers = append(curForumUsers, newForumUser)
-
-	fmt.Printf("%s forum User Login\n", newForumUser.Username)
+	forumUser.Username = unameDB
+	forumUser.Access = 1
+	forumUser.LoggedIn = true
+	fmt.Printf("%s forum User Login\n", forumUser.Username)
 
 	stmt, err := db.Prepare("UPDATE users SET loggedIn = ? WHERE username = ?;")
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer stmt.Close()
-	stmt.Exec(true, newForumUser.Username)
+	stmt.Exec(true, forumUser.Username)
 }
 
 func processLogout(w http.ResponseWriter, r *http.Request) {
 	c, _ := r.Cookie("session")
-
-	// find the logout user's username and remove it from curForumUsers
-
 	stmt, err := db.Prepare("DELETE FROM sessions WHERE sessionID=?")
 	if c != nil {
 		fmt.Printf("cookie sid to be removed (have value): %s\n", c.Value)
@@ -106,13 +97,13 @@ func processLogout(w http.ResponseWriter, r *http.Request) {
 		stmt.Exec(c.Value)
 	}
 
+	// test
 	var sessionID string
-	var logoutUName string
 	rows, err := db.Query("SELECT * FROM sessions")
 	for rows.Next() {
-		rows.Scan(&sessionID, &logoutUName)
+		rows.Scan(&sessionID)
 	}
-	fmt.Printf("cookie sid removed (should be empty): %s, user %s\n", sessionID, logoutUName) // empty is correct
+	fmt.Printf("cookie sid removed (should be empty): %s\n", sessionID) // empty is correct
 
 	_, err = r.Cookie("session")
 	if err == nil {
@@ -122,8 +113,7 @@ func processLogout(w http.ResponseWriter, r *http.Request) {
 			MaxAge: -1,
 		})
 	}
-
-	fmt.Printf("%s Logout\n", ForumUsers.Username)
+	fmt.Printf("%s Logout\n", forumUser.Username)
 
 	stmt, err = db.Prepare("UPDATE users SET loggedIn = ? WHERE username = ?;")
 	if err != nil {
