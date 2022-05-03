@@ -64,8 +64,9 @@ func processPost(r *http.Request) {
 
 		// Insert other cats if any, with the prev postID
 		if len(postCat) > 1 {
+			// fmt.Println("More than 1 post cat")
 			var curPostId int
-			rows, err := db.Query("SELECT MAX(postID) from posts ")
+			rows, err := db.Query("SELECT MAX(postID) from posts;")
 			if err != nil {
 				log.Fatal(err)
 			}
@@ -76,11 +77,12 @@ func processPost(r *http.Request) {
 			}
 
 			for cat := 1; cat < len(postCat); cat++ {
+				fmt.Printf("current post id is %d, cureently inserting the %dth category\n", curPostId, cat)
 				stmt, err = db.Prepare("INSERT INTO posts (postID, author, image, title, content, category, postTime, likes, dislikes) VALUES(?,?,?,?,?,?,?,?,?);")
 				if err != nil {
 					log.Fatal(err)
 				}
-				stmt.Close()
+				defer stmt.Close()
 				stmt.Exec(curPostId, forumUser.Username, forumUser.Image, postTitle, postCon, postCat[cat], time.Now(), 0, 0)
 			}
 
