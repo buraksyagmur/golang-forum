@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 	"strconv"
+	"strings"
 )
 
 type mainPageData struct {
@@ -116,7 +117,7 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func LogoutHanler(w http.ResponseWriter, r *http.Request) {
+func LogoutHandler(w http.ResponseWriter, r *http.Request) {
 	//	if loggedIn(r) {
 	processLogout(w, r)
 	//	}
@@ -145,18 +146,20 @@ func PostPageHandler(w http.ResponseWriter, r *http.Request) {
 				Chosen = append(Chosen, pos[i])
 			}
 		}
+		if Chosen[0].IPs == ""{
+			Chosen[0].IPs = GetOutboundIP().String() 
+			duplicateIP = true
+		}
+		if Chosen[0].IPs == GetOutboundIP().String() {
+			duplicateIP = true
+		}
 
-		for i := 0; i < len(Chosen[0].IPs); i++ {
-			if Chosen[0].IPs[i].String() == GetOutboundIP().String() {
-				duplicateIP = true
-			}
-		}
 		if !duplicateIP {
-			Chosen[0].IPs = append(Chosen[0].IPs, GetOutboundIP())
-			Chosen[0].Viewed++
+			Chosen[0].IPs += "-" + GetOutboundIP().String()
 		}
-		fmt.Println(GetOutboundIP())
-		fmt.Println(Chosen[0].Viewed)
+		Chosen[0].View = len(strings.Split(Chosen[0].IPs, "-"))
+		fmt.Println(Chosen[0].View)
+		fmt.Println(Chosen[0].IPs)
 		urlPost = "postpage?postdetails=" + strID + "&postdetails=" + Chosen[0].Title
 		data := mainPageData{
 			Posts:       Chosen,

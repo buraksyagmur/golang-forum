@@ -53,14 +53,15 @@ func processPost(r *http.Request, curUser user) {
 		postCon := r.PostForm.Get("postContent")
 		postCat := r.PostForm["postCat"]
 		fmt.Println(postCat)
+		var ip string
 
 		// Insert the first cat
-		stmt, err := db.Prepare("INSERT INTO posts (author, image, title, content, category, postTime, likes, dislikes) VALUES (?,?,?,?,?,?,?,?);")
+		stmt, err := db.Prepare("INSERT INTO posts (author, image, title, content, category, postTime, likes, dislikes, ips) VALUES (?,?,?,?,?,?,?,?,?);")
 		if err != nil {
 			log.Fatal(err)
 		}
 		defer stmt.Close()
-		stmt.Exec(curUser.Username, curUser.Image, postTitle, postCon, postCat[0], time.Now(), 0, 0)
+		stmt.Exec(curUser.Username, curUser.Image, postTitle, postCon, postCat[0], time.Now(), 0, 0, ip)
 
 		// Insert other cats if any, with the prev postID
 		if len(postCat) > 1 {
@@ -76,12 +77,12 @@ func processPost(r *http.Request, curUser user) {
 			}
 
 			for cat := 1; cat < len(postCat); cat++ {
-				stmt, err = db.Prepare("INSERT INTO posts (postID, author, image, title, content, category, postTime, likes, dislikes) VALUES(?,?,?,?,?,?,?,?,?);")
+				stmt, err = db.Prepare("INSERT INTO posts (postID, author, image, title, content, category, postTime, likes, dislikes, ips) VALUES(?,?,?,?,?,?,?,?,?,?);")
 				if err != nil {
 					log.Fatal(err)
 				}
 				stmt.Close()
-				stmt.Exec(curPostId, curUser.Username, curUser.Image, postTitle, postCon, postCat[cat], time.Now(), 0, 0)
+				stmt.Exec(curPostId, curUser.Username, curUser.Image, postTitle, postCon, postCat[cat], time.Now(), 0, 0, ip)
 			}
 
 		}

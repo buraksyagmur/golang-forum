@@ -1,7 +1,6 @@
 package forum
 
 import (
-	"net"
 	"time"
 )
 
@@ -28,8 +27,8 @@ type post struct {
 	Likes       int
 	Dislikes    int
 	Comments    []comment
-	Viewed      int
-	IPs         []net.IP
+	IPs         string
+	View        int
 }
 
 type user struct {

@@ -19,7 +19,7 @@ func main() {
 	http.HandleFunc("/", forum.HomeHandler)
 	http.HandleFunc("/login", forum.LoginHandler)
 	http.HandleFunc("/register", forum.RegisterHandler)
-	http.HandleFunc("/logout", forum.LogoutHanler)
+	http.HandleFunc("/logout", forum.LogoutHandler)
 	http.HandleFunc("/postpage", forum.PostPageHandler)
 	// http.HandleFunc("/delete", forum.DeleteHandler)
 	fmt.Println("Starting server at port 8080")

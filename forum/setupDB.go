@@ -28,7 +28,7 @@ func createSessionsTable() {
 }
 
 func createPostsTable() {
-	stmt, err := db.Prepare("CREATE TABLE IF NOT EXISTS posts (postID INTEGER PRIMARY KEY AUTOINCREMENT, author VARCHAR(30),image VARCHAR(2083), title VARCHAR(50), content VARCHAR(1000), category VARCHAR(50), postTime DATETIME, likes INTEGER, dislikes INTEGER, FOREIGN KEY(author) REFERENCES users(username));")
+	stmt, err := db.Prepare("CREATE TABLE IF NOT EXISTS posts (postID INTEGER PRIMARY KEY AUTOINCREMENT, author VARCHAR(30),image VARCHAR(2083), title VARCHAR(50), content VARCHAR(1000), category VARCHAR(50), postTime DATETIME, likes INTEGER, dislikes INTEGER, ips VARCHAR(10) , FOREIGN KEY(author) REFERENCES users(username));")
 	if err != nil {
 		log.Fatal(err)
 	}
