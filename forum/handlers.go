@@ -158,9 +158,16 @@ func PostPageHandler(w http.ResponseWriter, r *http.Request) {
 		if !duplicateIP {
 			Chosen[0].IPs += "-" + GetOutboundIP().String()
 		}
-		Chosen[0].View = len(strings.Split(Chosen[0].IPs, "-"))
-		fmt.Println(Chosen[0].View)
-		fmt.Println(Chosen[0].IPs)
+		allIp := (strings.Split(Chosen[0].IPs, "-"))
+		keys := make(map[string]bool)
+		list := []string{}
+		for _, entry := range allIp {
+			if _, value := keys[entry]; !value {
+				keys[entry] = true
+				list = append(list, entry)
+			}
+		}
+		Chosen[0].View = len(list)
 		stmt, err := db.Prepare("UPDATE posts SET ips = ?	WHERE postID = ?;")
 		if err != nil {
 			log.Fatal(err)
