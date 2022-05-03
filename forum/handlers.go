@@ -35,8 +35,8 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 	// for rows.Next() {
 	// 	rows.Scan(&whichUser, &logInOrNot)
 	// }
+	fmt.Println(displayPostsAndComments()[0])
 	// fmt.Printf("HomeHandler:: login user: %s, login status: %v\n", whichUser, logInOrNot)
-
 	if r.Method == http.MethodGet {
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
 		tpl, err := template.ParseFiles("./templates/header.gohtml", "./templates/header2.gohtml", "./templates/footer.gohtml", "./templates/index.gohtml")
@@ -146,8 +146,9 @@ func PostPageHandler(w http.ResponseWriter, r *http.Request) {
 				Chosen = append(Chosen, pos[i])
 			}
 		}
-		if Chosen[0].IPs == ""{
-			Chosen[0].IPs = GetOutboundIP().String() 
+
+		if Chosen[0].IPs == "" {
+			Chosen[0].IPs = GetOutboundIP().String()
 			duplicateIP = true
 		}
 		if Chosen[0].IPs == GetOutboundIP().String() {
@@ -160,6 +161,12 @@ func PostPageHandler(w http.ResponseWriter, r *http.Request) {
 		Chosen[0].View = len(strings.Split(Chosen[0].IPs, "-"))
 		fmt.Println(Chosen[0].View)
 		fmt.Println(Chosen[0].IPs)
+		stmt, err := db.Prepare("UPDATE posts SET ips = ?	WHERE postID = ?;")
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer stmt.Close()
+		stmt.Exec(Chosen[0].IPs, Chosen[0].PostID)
 		urlPost = "postpage?postdetails=" + strID + "&postdetails=" + Chosen[0].Title
 		data := mainPageData{
 			Posts:       Chosen,
