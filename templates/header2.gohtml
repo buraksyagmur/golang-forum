@@ -12,14 +12,12 @@
 <body>
  <div class="navbar">
   <a href="/">Main Page</a>
-  <div class="dropdown">
-    <button class="dropbtn">Account</button>
+  <div class="dropdown"> 
+    <button class="dropbtn">Account{{ .Userinfo.Username }}</button>
     <div class="dropdown-content">
       <a href="NEEDTOCREATE">Posts</a>
-      <a href="NEEDTOCREATE">Settings</a>
       <a href="logout">LogOut</a>
     </div>
   </div>
-</div> 
-{{end}}    
-
+</div>
+{{end}}   

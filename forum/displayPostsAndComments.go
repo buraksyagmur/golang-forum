@@ -7,7 +7,7 @@ import (
 func displayComments(postID int) []comment {
 	// fmt.Printf("postID: %d\n", postID)
 	var coms []comment
-	rows, err := db.Query("SELECT commentID, comments.[author] AS commentAuthor, comments.[postID], comments.[content], commentTime, comments.[likes], comments.[dislikes] FROM comments LEFT JOIN posts ON comments.postID = posts.postID	WHERE comments.postID = ?;", postID)
+	rows, err := db.Query("SELECT commentID, author, postID, content, commentTime, likes, dislikes FROM comments WHERE postID = ?;", postID)
 	if err != nil {
 		log.Fatal(err)
 	}

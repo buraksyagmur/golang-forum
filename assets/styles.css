@@ -24,24 +24,32 @@ h1 {
     color : #8453CE;
     
 }
-.forum-post:nth-child(even){
+.forum-post:nth-child(odd){
   background-color: rgba(249, 234, 242, 0.9);
 }
-.forum-post:nth-child(odd){
+.forum-post:nth-child(even){
   background-color: rgba(249, 234, 242, 0.3);
 }
 .forum-comment:nth-child(even){
-  background-color: rgba(249, 234, 242, 0.9);
+  background-color: rgba(249, 234, 242, 0.3);
+  font-size: small;
+  overflow: auto;
 }
 .forum-comment:nth-child(odd){
-  background-color: rgba(249, 234, 242, 0.3);
-}
-.forum-comment{
+  background-color: rgba(249, 234, 242, 0.9);
   font-size: small;
+  overflow: auto;
 }
+/* .forum-comment{
+  
+  background-color:grey; 
+}*/
 .forum-postPage{
-  background-color: white;
+  background-color:#FFFEFE;
   font-size:large
+}
+.commentInput{
+  background-color: #8453CE;
 }
 ul.titleclass{
   list-style-type: none;
@@ -72,17 +80,7 @@ ul.titleclass{
   margin-left: 25px ;
 }
 
-button{
-  background-color: #56C271;
-  border: none;
-  color: #FFFEFE;
-  padding: 8px 16px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 12px;
 
-}
 .postbutton:hover {
   cursor: pointer;
 }
@@ -187,4 +185,66 @@ button{
   }
   .contentofPost{
     font: 20px Arial, sans-serif;
+  }
+  #myBtn {
+    
+    position: fixed; 
+    bottom: 20px; 
+    right: 30px; 
+    border-radius: 4px;
+    background-color:#8453CE;
+    border: none;
+    color: #FFFFFF;
+    text-align: center;
+    font-size: 12px;
+    padding: 14px;
+    width: 150px;
+    transition: all 0.5s;
+    cursor: pointer;
+    margin: 5px;
+  
+  }
+  #myBtn span {
+    cursor: pointer;
+    display: inline-block;
+    position: relative;
+    transition: 0.5s;
+  }
+  
+  #myBtn span:after {
+    content: '\00bb';
+    position: absolute;
+    opacity: 0;
+    top: 0;
+    right: -2px;
+    transition: 0.5s;
+    transform:rotate(-90deg);
+  }
+  #myBtn:hover span {
+    padding-right: 25px;
+  }
+  
+  #myBtn:hover span:after {
+    opacity: 1;
+    right: 0;
+  }
+  
+  #likebutton{ 
+    border-radius: 4px;
+    background-color: none;
+    border: none;
+    text-align: center;
+    font-size: 20px;
+    font-weight: bolder;  
+    cursor: pointer;
+    
+  }
+  #Dlikebutton{
+    border-radius: 4px;
+    background-color: none;
+    border: none; 
+    text-align: center;
+    font-size: 20px;
+    font-weight: bolder;   
+    cursor: pointer;
   }

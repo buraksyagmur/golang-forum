@@ -11,10 +11,11 @@
     <p class="contentofPost" style="white-space: pre-line">{{.Content}}</p>
     <form action="/category" method="GET">
         <input type="submit" name="categoryAllPosts" class="categoryclass" value={{.Category}}>
-<div id="photo">
+        </form>
+
   <img  src={{.Image}} alt="ProfilePicture">
   <span >{{.Author}}</span>
-</div>
+
       <p class= "timeOfpost">{{.PostTimeStr}}</p>
       <p class="views">views:{{.View}}</p>
     <form method="post">
@@ -27,14 +28,14 @@
     </form>
      </div>
     {{range .Comments}}
-    <div class="forum-comment">
+     <div class="forum-comment">
+    
        
         <p style="white-space: pre-line">{{.Content}}</p>
        
-            <div id="photo">
-  <img  src={{.Image}} alt="">
+    
   <span >{{.Author}}</span>
-</div>
+
           <p class= "timeOfpost">{{.CommentTimeStr}}</p>
         <form method="post">
             <button type="submit" name="com-like" value="{{.PostID}}-{{.CommentID}}-{{.Likes}}">&#x2661</button>
@@ -44,8 +45,9 @@
             <button type="submit" name="com-dislike" value="{{.PostID}}-{{.CommentID}}-{{.Dislikes}}">&#8681</button>
             <span>{{.Dislikes}}</span>
         </form>
-   
+   </div>
     {{end}}
+    <div class="commentInput">
     <form method="post">
         <label for="comment">comment: </label>
         <textarea type="text" id="comment" name="comment" rows="1" cols="30"></textarea>
@@ -62,10 +64,11 @@
     <p class="contentofPost">{{.Content}}</p>
        <form action="/category" method="GET">
         <input type="submit" name="categoryAllPosts" class="categoryclass" value={{.Category}}>
-         <div id="photo">
+        </form>
+         
   <img src={{.Image}} alt="">
   <span >{{.Author}}</span>
-</div>
+
        <p class= "timeOfpost">{{.PostTimeStr}}</p>
      <p class="views">views:{{.View}}</p>
     <form action="/login" method="get">
@@ -78,15 +81,10 @@
     </form>
      </div>
     {{range .Comments}}
-    <div class="forum-comment">
-       
-        <p style="white-space: pre-line">{{.Content}}</p>
- 
-        <div id="photo">
-  <img src={{.Image}} alt="">
-  <span >{{.Author}}</span>
-</div>
-          <p class= "timeOfpost">{{.CommentTimeStr}}</p>
+    <div class="forum-comment"> 
+      <p> {{.Content}}</p>    
+       <p>{{.Author}}</p>
+       <p class= "timeOfpost">{{.CommentTimeStr}}</p>
         <form action="/login" method="get">
             <button type="submit" name="com-like" value="{{.PostID}}-{{.CommentID}}-{{.Likes}}">Like</button>
             <span>{{.Likes}}</span>
@@ -95,8 +93,10 @@
             <button type="submit" name="com-dislike" value="{{.PostID}}-{{.CommentID}}-{{.Dislikes}}">Dislike</button>
             <span>{{.Dislikes}}</span>
         </form>
-   
+        </ul>
+   </div>
     {{end}}
+    <div class="commentInput">
     <form action="/login" method="get">
         <label for="comment">comment: </label>
         <textarea type="text" id="comment" name="comment" rows="1" cols="30"></textarea>
@@ -105,3 +105,4 @@
 </div>
 {{end}}
 {{end}}
+{{template "footer"}}

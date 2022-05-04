@@ -91,7 +91,7 @@
     <p>{{.PostTimeStr}}</p>
     <p>by {{.Author}}</p>
      <form method="post">
-        <button type="submit" name="po-like" class="Like" value="{{.PostID}}-{{.Likes}}">&#x2661</button>
+        <button type="submit"  name="po-like" class="Like" value="{{.PostID}}-{{.Likes}}">&#x2661</button>
         <span>{{.Likes}}</span> 
     </form>
     <form method="post">
@@ -115,11 +115,12 @@
     <p>{{.PostTimeStr}}</p>
     <p>by {{.Author}}</p>
     <form action="/login" method="GET">
- <button type="submit" class="Like">&#x2661</button></a>
+ <button type="submit" id="likebutton" class="Like">
+ <i class="fa-solid fa-heart"></i></button>
         <span>{{.Likes}}</span> 
     </form>
     <form action="/login" method="GET">
-        <button type="submit" class="Dlike">&#8681</button>
+        <button type="submit" id="Dlikebutton" class="Dlike"><i class="fa-solid fa-heart-crack"></i></button>
         <span>{{.Dislikes}}</span>
     </form>
 </div>

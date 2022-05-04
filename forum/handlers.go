@@ -35,7 +35,7 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 	// for rows.Next() {
 	// 	rows.Scan(&whichUser, &logInOrNot)
 	// }
-	fmt.Println(displayPostsAndComments()[0])
+	
 	// fmt.Printf("HomeHandler:: login user: %s, login status: %v\n", whichUser, logInOrNot)
 	if r.Method == http.MethodGet {
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
