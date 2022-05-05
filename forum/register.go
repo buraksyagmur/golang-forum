@@ -78,7 +78,7 @@ func regNewUser(w http.ResponseWriter, r *http.Request) {
 	http.SetCookie(w, &http.Cookie{
 		Name:   "session",
 		Value:  sid.String(),
-		MaxAge: 1800,
+		MaxAge: 900, //15 mins
 	})
 	fmt.Printf("reg sid: %s\n", sid)
 	fmt.Printf("Reg and login as %s\n", uname)
