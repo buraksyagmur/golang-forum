@@ -22,7 +22,7 @@ var (
 )
 
 func HomeHandler(w http.ResponseWriter, r *http.Request) {
-	curUser := checkCookie(r)
+	curUser := obtainCurUserFormCookie(r)
 
 	// // test
 	// var whichUser string
@@ -125,7 +125,7 @@ func LogoutHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func PostPageHandler(w http.ResponseWriter, r *http.Request) {
-	curUser := checkCookie(r)
+	curUser := obtainCurUserFormCookie(r)
 	if r.Method == "GET" {
 		tpl, err := template.ParseFiles("./templates/header.gohtml", "./templates/footer.gohtml", "./templates/header2.gohtml", "./templates/post.gohtml")
 		if err != nil {
@@ -194,7 +194,7 @@ func PostPageHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func CategoryPageHandler(w http.ResponseWriter, r *http.Request) {
-	curUser := checkCookie(r)
+	curUser := obtainCurUserFormCookie(r)
 	if r.Method == "GET" {
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
 		tpl, err := template.ParseFiles("./templates/header.gohtml", "./templates/header2.gohtml", "./templates/footer.gohtml", "./templates/categories.gohtml")

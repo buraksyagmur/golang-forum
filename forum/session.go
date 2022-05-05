@@ -67,13 +67,33 @@ func processLogin(w http.ResponseWriter, r *http.Request) {
 	}
 	fmt.Printf("%s (name from DB) Login successfully\n", unameDB)
 
+	// allow each user to have only one opened session
+	var loggedInUname string
+	rows, err = db.Query("SELECT username FROM sessions WHERE username = ?;", unameDB)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer rows.Close()
+	for rows.Next() {
+		rows.Scan(&loggedInUname)
+	}
+	// if the uname can be found in session table, remove that row (should only have 1 row)
+	if loggedInUname != "" {
+		stmt, err := db.Prepare("DELETE FROM sessions WHERE username = ?;")
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer stmt.Close()
+		stmt.Exec(loggedInUname)
+	}
+
 	// assign a cookie
 	sid := uuid.NewV4()
 	fmt.Printf("login sid: %s\n", sid)
 	http.SetCookie(w, &http.Cookie{
 		Name:   "session",
 		Value:  sid.String(),
-		MaxAge: 1800,
+		MaxAge: 900, // 15mins
 	})
 
 	// forumUser.Username = unameDB
@@ -164,7 +184,7 @@ func processLogout(w http.ResponseWriter, r *http.Request) {
 	stmt.Exec(false, logoutUname)
 }
 
-func checkCookie(r *http.Request) user {
+func obtainCurUserFormCookie(r *http.Request) user {
 	var curUser user
 	c, err := r.Cookie("session")
 	// if there is a session cookie
@@ -204,7 +224,7 @@ func checkCookie(r *http.Request) user {
 	for rows.Next() {
 		rows.Scan(&whichUser, &logInOrNot)
 	}
-	fmt.Printf("checkCookie:: login user: %s, login status: %v\n", whichUser, logInOrNot)
+	fmt.Printf("obtainCurUserFormCookie:: login user: %s, login status: %v\n", whichUser, logInOrNot)
 
 	return curUser
 }
